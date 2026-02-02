@@ -79,7 +79,19 @@ const AIGuesserMode = ({ onBackToMenu }) => {
       setQuestionCount(prev => prev + 1);
       setIsLoading(false);
 
-      if (aiResponse.toLowerCase().includes('is it')) {
+      // Detect a final guess — only end the game when the AI explicitly
+      // commits to a guess (after enough questions) or uses final-guess
+      // phrasing.  Plain narrowing questions like "Is it a living thing?"
+      // should NOT end the game.
+      const lower = aiResponse.toLowerCase();
+      const isFinalGuess =
+        lower.includes('my final guess') ||
+        lower.includes('my guess is') ||
+        lower.includes('i think it is') ||
+        lower.includes("i'm going to guess") ||
+        lower.includes('i believe it is') ||
+        (questionCount >= 10 && /\bis it [a-z]/.test(lower));
+      if (isFinalGuess) {
         setGameEnded(true);
       }
     } catch (err) {
