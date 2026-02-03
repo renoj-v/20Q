@@ -1,0 +1,421 @@
+/* User Guesser Mode — Card-based design matching Figma */
+
+.user-guesser {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #bfbff6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Decorative gradient background shapes */
+.user-guesser::before,
+.user-guesser::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.user-guesser::before {
+  width: 600px;
+  height: 600px;
+  top: -100px;
+  left: -200px;
+  background: radial-gradient(ellipse at center, #3a5ba0 0%, #2a3a7c 40%, transparent 70%);
+}
+
+.user-guesser::after {
+  width: 700px;
+  height: 700px;
+  bottom: -150px;
+  right: -200px;
+  background: radial-gradient(ellipse at center, #5a7cbf 0%, #3a5090 30%, transparent 70%);
+}
+
+/* Extra decorative layer */
+.user-guesser-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.user-guesser-bg::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 30%;
+  left: -100px;
+  background: radial-gradient(ellipse at center, #4a6aaa 0%, transparent 60%);
+  filter: blur(60px);
+  opacity: 0.4;
+}
+
+.user-guesser-bg::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 500px;
+  top: 10%;
+  right: -50px;
+  background: radial-gradient(ellipse at center, #2a4a8a 0%, transparent 60%);
+  filter: blur(60px);
+  opacity: 0.35;
+}
+
+/* Back button */
+.user-guesser-back {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.7);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s;
+}
+
+.user-guesser-back:hover {
+  color: white;
+}
+
+.user-guesser-back:focus {
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+/* Wrapper for AI response + card */
+.user-guesser-main {
+  position: relative;
+  z-index: 2;
+  margin-top: 256px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Question card — user's question displayed */
+.user-guesser-card {
+  position: relative;
+  z-index: 2;
+  width: 262px;
+  max-width: 80vw;
+  min-height: 200px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  box-shadow: 0px 0px 13px 0px white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  animation: userCardFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes userCardFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6) translate3d(0, 200px, 0);
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.user-guesser-card-text {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 20px;
+  line-height: 1.53;
+  color: black;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+/* AI response above the card */
+.user-guesser-response {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.53;
+  color: black;
+  text-align: center;
+  max-width: 262px;
+  animation: responseFadeIn 0.3s ease-out;
+}
+
+@keyframes responseFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.user-guesser-response.loading {
+  animation: responsePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes responsePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Question counter */
+.user-guesser-counter {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 16px;
+  color: rgb(20, 19, 19);
+  text-align: center;
+}
+
+/* Textbox area */
+.user-guesser-input-area {
+  position: relative;
+  z-index: 2;
+  width: 343px;
+  max-width: 92vw;
+  margin-top: 12px;
+  margin-bottom: 40px;
+}
+
+.user-guesser-form {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 56px;
+}
+
+/* Input glow behind */
+.user-guesser-form::before {
+  content: '';
+  position: absolute;
+  inset: 5px 4px;
+  background: #d9d9d9;
+  box-shadow: 0px 0px 18px 12px rgba(255, 255, 255, 0.25);
+  z-index: -1;
+}
+
+.user-guesser-input {
+  flex: 1;
+  background: #0b2660;
+  border: 2px solid #9aa8c6;
+  border-radius: 8px;
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 0 16px;
+  font-family: 'Inter', 'Instrument Sans', sans-serif;
+  font-size: 18px;
+  color: white;
+  outline: none;
+}
+
+.user-guesser-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.user-guesser-input:focus {
+  border-color: #b0bfdf;
+}
+
+.user-guesser-submit {
+  width: 56px;
+  height: 56px;
+  background: #0b2660;
+  border: 2px solid #9aa8c6;
+  border-left: 1px solid #9aa8c6;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.user-guesser-submit:hover {
+  background: #0d3080;
+}
+
+.user-guesser-submit:focus {
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+.user-guesser-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Paper plane icon */
+.user-guesser-submit svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+/* Game end overlay */
+.user-guesser-end {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 300px;
+  max-width: 85vw;
+  text-align: center;
+}
+
+.user-guesser-end h3 {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 32px;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.user-guesser-end p {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 24px;
+}
+
+.user-guesser-end-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-guesser-end-btn {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.user-guesser-end-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.user-guesser-end-btn:focus {
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+/* Final guess input area in end state */
+.user-guesser-final-guess {
+  display: flex;
+  width: 100%;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.user-guesser-final-input {
+  flex: 1;
+  background: #0b2660;
+  border: 2px solid #9aa8c6;
+  border-radius: 8px 0 0 8px;
+  border-right: none;
+  padding: 0 16px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 16px;
+  color: white;
+  outline: none;
+}
+
+.user-guesser-final-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.user-guesser-final-submit {
+  background: #0b2660;
+  border: 2px solid #9aa8c6;
+  border-left: 1px solid #9aa8c6;
+  border-radius: 0 8px 8px 0;
+  padding: 0 16px;
+  color: white;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.user-guesser-final-submit:hover {
+  background: #0d3080;
+}
+
+.user-guesser-final-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Error state */
+.user-guesser-error {
+  position: relative;
+  z-index: 2;
+  margin: auto;
+  padding: 32px;
+  max-width: 300px;
+  text-align: center;
+}
+
+.user-guesser-error h2 {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.user-guesser-error p {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+/* Disabled state */
+.user-guesser-input-area.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .user-guesser-main {
+    margin-top: 180px;
+  }
+
+  .user-guesser-input-area {
+    width: 92vw;
+  }
+}
