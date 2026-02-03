@@ -1,25 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initializeAIGuesser, continueAIGuesser } from '../services/claude';
-import './GameMode.css';
+import './AIGuesserMode.css';
 
 const AIGuesserMode = ({ onBackToMenu }) => {
-  const [messages, setMessages] = useState([]);
   const [conversationHistory, setConversationHistory] = useState([]);
   const [systemPrompt, setSystemPrompt] = useState('');
   const [questionCount, setQuestionCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [gameEnded, setGameEnded] = useState(false);
-  const [userInput, setUserInput] = useState('');
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const [currentQuestion, setCurrentQuestion] = useState('');
+  const [finalMessage, setFinalMessage] = useState('');
 
   useEffect(() => {
     startGame();
@@ -29,20 +20,17 @@ const AIGuesserMode = ({ onBackToMenu }) => {
     try {
       setIsLoading(true);
       setError(null);
+      setGameEnded(false);
+      setFinalMessage('');
 
       const { firstQuestion, systemPrompt: prompt } = await initializeAIGuesser();
 
       setSystemPrompt(prompt);
-      setMessages([
-        { role: 'system', content: 'Think of an object, and I will try to guess it!' },
-        { role: 'ai', content: firstQuestion }
-      ]);
-
+      setCurrentQuestion(firstQuestion);
       setConversationHistory([
         { role: 'user', content: 'I am thinking of an object. You can ask me up to 20 yes/no questions to guess what it is. Start by asking your first question.' },
         { role: 'assistant', content: firstQuestion }
       ]);
-
       setQuestionCount(1);
       setIsLoading(false);
     } catch (err) {
@@ -59,30 +47,20 @@ const AIGuesserMode = ({ onBackToMenu }) => {
       setError(null);
 
       const userMessage = { role: 'user', content: answer };
-      const newMessages = [...messages, { role: 'user', content: answer }];
-      setMessages(newMessages);
-
       const newHistory = [...conversationHistory, userMessage];
 
       if (questionCount >= 20) {
-        setMessages([...newMessages, {
-          role: 'system',
-          content: '20 questions reached! The AI will now make its final guess.'
-        }]);
         setGameEnded(true);
       }
 
       const aiResponse = await continueAIGuesser(newHistory, systemPrompt);
 
-      setMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
+      setCurrentQuestion(aiResponse);
       setConversationHistory([...newHistory, { role: 'assistant', content: aiResponse }]);
       setQuestionCount(prev => prev + 1);
       setIsLoading(false);
 
-      // Detect a final guess — only end the game when the AI explicitly
-      // commits to a guess (after enough questions) or uses final-guess
-      // phrasing.  Plain narrowing questions like "Is it a living thing?"
-      // should NOT end the game.
+      // Detect a final guess
       const lower = aiResponse.toLowerCase();
       const isFinalGuess =
         lower.includes('my final guess') ||
@@ -92,6 +70,7 @@ const AIGuesserMode = ({ onBackToMenu }) => {
         lower.includes('i believe it is') ||
         (questionCount >= 10 && /\bis it [a-z]/.test(lower));
       if (isFinalGuess) {
+        setFinalMessage(aiResponse);
         setGameEnded(true);
       }
     } catch (err) {
@@ -100,94 +79,66 @@ const AIGuesserMode = ({ onBackToMenu }) => {
     }
   };
 
-  const handleCustomAnswer = (e) => {
-    e.preventDefault();
-    if (userInput.trim()) {
-      handleAnswer(userInput);
-      setUserInput('');
-    }
-  };
-
   if (error) {
     return (
-      <div className="game-mode">
-        <div className="error-container">
+      <div className="ai-guesser">
+        <div className="ai-guesser-bg" />
+        <button onClick={onBackToMenu} className="ai-guesser-back">← Back</button>
+        <div className="ai-guesser-error">
           <h2>Error</h2>
           <p>{error}</p>
-          <p className="error-hint">Make sure your API key is properly configured in the .env file.</p>
-          <button onClick={onBackToMenu} className="back-button">Back to Menu</button>
+          <p>Make sure your API key is properly configured in the .env file.</p>
+          <button onClick={onBackToMenu} className="ai-guesser-end-btn">Back to Menu</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="game-mode">
-      <div className="game-header">
-        <button onClick={onBackToMenu} className="back-button">← Back</button>
-        <h2>AI Guesser Mode</h2>
-        <div className="question-counter">
-          Question {questionCount}/20
-        </div>
+    <div className="ai-guesser">
+      <div className="ai-guesser-bg" />
+      <button onClick={onBackToMenu} className="ai-guesser-back">← Back</button>
+
+      <div className="ai-guesser-counter">
+        Question {questionCount} of 20
       </div>
 
-      <div className="chat-container">
-        {messages.map((msg, index) => (
-          <div key={index} className={`message ${msg.role}`}>
-            <div className="message-content">
-              {msg.role === 'ai' && <strong>AI: </strong>}
-              {msg.role === 'user' && <strong>You: </strong>}
-              {msg.content}
-            </div>
-          </div>
-        ))}
-
-        {isLoading && (
-          <div className="message ai">
-            <div className="message-content">
-              <strong>AI: </strong>
-              <span className="loading">Thinking...</span>
-            </div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
+      <div className="ai-guesser-card">
+        <p className={`ai-guesser-card-text${isLoading && !currentQuestion ? ' loading' : ''}`}>
+          {isLoading && !currentQuestion
+            ? 'Thinking of a question...'
+            : gameEnded && finalMessage
+              ? finalMessage
+              : currentQuestion}
+        </p>
       </div>
 
-      {!gameEnded && !isLoading && (
-        <div className="answer-buttons">
-          <button onClick={() => handleAnswer('Yes')} className="answer-btn yes-btn">
-            Yes
+      {!gameEnded ? (
+        <div className={`ai-guesser-answers${isLoading ? ' disabled' : ''}`}>
+          <div className="ai-guesser-yesno">
+            <button onClick={() => handleAnswer('No')} className="ai-guesser-no">
+              <span className="arrow">↰</span>
+              <span className="label">No</span>
+            </button>
+            <button onClick={() => handleAnswer('Yes')} className="ai-guesser-yes">
+              <span className="arrow">↱</span>
+              <span className="label">Yes</span>
+            </button>
+          </div>
+          <button onClick={() => handleAnswer('Sometimes')} className="ai-guesser-btn">
+            Sometimes
           </button>
-          <button onClick={() => handleAnswer('No')} className="answer-btn no-btn">
-            No
-          </button>
-          <button onClick={() => handleAnswer('Maybe / Sometimes')} className="answer-btn maybe-btn">
-            Maybe
+          <button onClick={() => handleAnswer('Unsure')} className="ai-guesser-btn">
+            Unsure
           </button>
         </div>
-      )}
-
-      {!gameEnded && !isLoading && (
-        <form onSubmit={handleCustomAnswer} className="custom-answer-form">
-          <input
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Or type a custom answer..."
-            className="custom-answer-input"
-          />
-          <button type="submit" className="custom-answer-submit">Send</button>
-        </form>
-      )}
-
-      {gameEnded && (
-        <div className="game-end">
+      ) : (
+        <div className="ai-guesser-end">
           <h3>Game Over!</h3>
           <p>Did the AI guess correctly?</p>
-          <div className="end-buttons">
-            <button onClick={startGame} className="restart-btn">Play Again</button>
-            <button onClick={onBackToMenu} className="menu-btn">Main Menu</button>
+          <div className="ai-guesser-end-buttons">
+            <button onClick={startGame} className="ai-guesser-end-btn">Play Again</button>
+            <button onClick={onBackToMenu} className="ai-guesser-end-btn">Main Menu</button>
           </div>
         </div>
       )}
