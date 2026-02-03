@@ -50,16 +50,33 @@ Components always import from `claude.js`. Switching between mock/live requires 
 
 **`src/components/ModeSelection.jsx`** — Stateless. Two mode cards. Props: `onSelectMode(mode)`.
 
-**`src/components/AIGuesserMode.jsx`** — AI asks questions, user answers Yes/No/Sometimes/Unsure. **REDESIGNED in Session 5** to card-based UI matching Figma.
-- State: conversationHistory, systemPrompt, questionCount, isLoading, error, gameEnded, currentQuestion, finalMessage
-- No longer uses `messages` array or chat bubbles — shows only the current AI question on a frosted-glass card
-- Answer buttons: Yes/No as stylized rotated italic labels with arrows; Sometimes/Unsure as full-width bordered buttons
+**`src/components/AIGuesserMode.jsx`** — AI asks questions, user answers Yes/No/Sometimes/Unsure. **REDESIGNED in Sessions 5-6** to card-based swipeable UI matching Figma.
+- State: conversationHistory, systemPrompt, questionCount, isLoading, error, gameEnded, currentQuestion, finalMessage, glowOverride
+- Uses `SwipeCard` component (keyed by `questionCount`) — shows only the current AI question on a draggable frosted-glass card
+- Swipe right = Yes (green glow/particles), swipe left = No (red glow/particles)
+- Sometimes button: yellow glow on hover, yellow particle burst + card dissolve on click
+- Unsure button: white glow on hover, white particle burst + card dissolve on click
+- `cardRef` (via `useImperativeHandle`) exposes `getBoundingClientRect()` and `dissolve()` to parent
 - Game-end detection unchanged: explicit final-guess phrases OR `questionCount >= 10` + `/\bis it [a-z]/`
-- Imports `AIGuesserMode.css` (dedicated) instead of `GameMode.css`
 
-**`src/components/UserGuesserMode.jsx`** — User asks questions, AI answers.
-- State: messages, conversationHistory, systemPrompt, questionCount, isLoading, error, gameEnded, userInput, gameStarted
-- Game ends at questionCount >= 20, then shows final guess UI
+**`src/components/SwipeCard.jsx`** — **NEW in Session 6**. Reusable draggable card with `forwardRef`.
+- Pointer events for drag with capture; tracks X/Y offset + rotation
+- `SWIPE_CONFIG` exported object with all tunable animation parameters:
+  - `swipeThreshold` (100px), `maxDragDistance` (180px), `dissolveDuration` (90ms), `rotationFactor` (0.08 deg/px)
+  - `glow`: neutral (white), yes (green), no (red), sometimes (yellow), unsure (white) — each with color/blur/spread
+  - `particles`: count (32), lifetime (1600-2000ms), distance (80-280px), size (8-22px), spread (full circle)
+- `PARTICLE_HUES` map: right=green, left=red, sometimes=yellow/amber, unsure=white (0% saturation)
+- `spawnParticles(rect, direction, config)` exported — scatters particles across card face, directional bias for swipes, omnidirectional for button clicks
+- `glowOverride` prop allows parent to push a glow state (e.g. on button hover)
+- On committed swipe: card dissolves in place (scale+fade over `dissolveDuration`), particles burst, then `onSwipe` fires
+- `key={questionCount}` on parent causes React remount → fresh card plays CSS `swipeCardFadeIn` animation
+
+**`src/components/UserGuesserMode.jsx`** — User asks questions, AI answers. **REDESIGNED in Session 7** to card-based UI matching Figma.
+- State: conversationHistory, systemPrompt, questionCount, isLoading, error, gameEnded, userInput, gameStarted, currentQuestion, aiResponse, cardKey, finalGuessInput, finalResult
+- Card shows user's current question with bubble-rise fade-in animation (keyed by `cardKey`)
+- AI response shown as italic serif text above the card inside `.user-guesser-main` wrapper
+- Dark navy input (`#0b2660`) with SVG paper plane send icon
+- Game ends at questionCount >= 20, then shows final guess input + reveal/play-again buttons
 - `handleFinalGuess()` sends `"Is it [guess]?"`, `handleRevealAnswer()` sends give-up message
 
 ### Styling
@@ -67,8 +84,10 @@ Components always import from `claude.js`. Switching between mock/live requires 
 - **`src/App.css`** — Purple gradient background (#667eea → #764ba2). AI Guesser overrides this with its own full-viewport background.
 - **`src/index.css`** — CSS reset, Segoe UI font
 - **`src/components/ModeSelection.css`** — Grid layout, hover effects, responsive
-- **`src/components/GameMode.css`** — Styles for UserGuesserMode only (chat bubbles, answer buttons, etc.). No longer used by AIGuesserMode.
-- **`src/components/AIGuesserMode.css`** — **NEW in Session 5**. Dark navy (#151539) background with blurred radial gradient decorations. Frosted-glass card (white 50%, 8px radius, white glow). Instrument Serif/Sans fonts. Stylized Yes/No labels with rotation and arrows. Full-width bordered Sometimes/Unsure buttons. Game-end and error states in dark theme. Responsive.
+- **`src/components/UserGuesserMode.css`** — **NEW in Session 7**. Lavender background (`#bfbff6`), decorative gradient blurs, card styles (262px, frosted glass, white glow), `userCardFadeIn` animation (bubble-rise from input area: `scale(0.6) translate3d(0, 200px, 0)` → `scale(1)`), dark navy input box, game-end/error states, responsive breakpoints.
+- **`src/components/GameMode.css`** — Legacy chat-bubble styles. No longer used by either mode.
+- **`src/components/AIGuesserMode.css`** — **NEW in Session 5**. Background, layout, answer buttons, game-end/error states. Card styles moved to `SwipeCard.css` in Session 6.
+- **`src/components/SwipeCard.css`** — **NEW in Session 6**. Card dimensions (262x374px), frosted-glass appearance, `swipeCardFadeIn` animation (scale 0.9 + translate from -80px), loading pulse, responsive breakpoints.
 
 ### Config
 
@@ -81,7 +100,7 @@ Components always import from `claude.js`. Switching between mock/live requires 
 ## DATA FLOW
 
 ### Message Tracking
-- **UserGuesserMode** uses two parallel arrays: display (`messages`) and API (`conversationHistory`)
+- **UserGuesserMode** (redesigned) uses `conversationHistory` for API calls + `currentQuestion` / `aiResponse` strings for display (card shows one question at a time, AI response above)
 - **AIGuesserMode** (redesigned) uses only `conversationHistory` for API calls + `currentQuestion` string for display (card shows one question at a time)
 
 ### AI Guesser Flow
@@ -133,12 +152,33 @@ VITE_USE_MOCK=true                   # true = mock data, false/absent = live API
 ### Session 5: AI Guesser Mode Redesign — Figma Implementation
 - **Figma**: `https://www.figma.com/design/mlBGIIXMfq9ym4KSLZlDgx/20Q?node-id=386-11` (node "sample-game")
 - **Design**: Card-based question UI — dark navy background, frosted-glass card with current question, stylized Yes/No labels with arrows, bordered Sometimes/Unsure buttons. Fonts: Instrument Serif (italic) for content, Instrument Sans for UI text.
-- **Changes made**:
-  - `index.html`: Added Google Fonts imports (Instrument Serif italic, Instrument Sans 400-700)
-  - `src/components/AIGuesserMode.css`: Created new dedicated stylesheet matching Figma design
-  - `src/components/AIGuesserMode.jsx`: Rewrote UI from chat-bubbles to card-based. Removed `messages` array, `useRef`, scroll logic. Added `currentQuestion` and `finalMessage` state. All game logic preserved unchanged.
-- **Not changed**: `GameMode.css` (still used by UserGuesserMode), `UserGuesserMode.jsx`, `ModeSelection.jsx/css`, service layer, `App.jsx`
-- **PENDING**: UserGuesserMode has not been redesigned to match Figma yet. It still uses the old chat-bubble layout with `GameMode.css`.
+- `index.html`: Added Google Fonts imports (Instrument Serif italic, Instrument Sans 400-700)
+- `AIGuesserMode.css`: Created new dedicated stylesheet matching Figma design
+- `AIGuesserMode.jsx`: Rewrote UI from chat-bubbles to card-based. Removed `messages` array. Added `currentQuestion` and `finalMessage` state.
+
+### Session 6: SwipeCard Component — Drag, Glow, Particles
+- Extracted card into `SwipeCard.jsx` + `SwipeCard.css` as a reusable `forwardRef` component
+- **Swipe**: Drag right = Yes, drag left = No. Card rotates with drag. Committed swipe (>100px) dissolves card in place (scale+fade) and spawns directional particle burst, then fires `onSwipe` callback.
+- **Glow**: Dynamic box-shadow interpolates from white (neutral) to green (right) or red (left) based on drag distance. `glowOverride` prop allows external glow state from parent.
+- **Particles**: 32 particles per burst, scattered across card face, fly outward with eased transitions. Color-coded: green (Yes), red (No), yellow (Sometimes), white (Unsure). Exported `spawnParticles()` function for button use.
+- **Button interactions**: Sometimes/Unsure buttons set `glowOverride` on hover (yellow/white), trigger `card.dissolve()` + particles on click, then fire `handleAnswer` after `dissolveDuration`.
+- **Card transitions**: `key={questionCount}` causes React remount → fresh card plays `swipeCardFadeIn` CSS animation.
+- **All animation params** in exported `SWIPE_CONFIG` object for easy tuning.
+- **Not changed**: `GameMode.css`, `UserGuesserMode.jsx`, `ModeSelection.jsx/css`, service layer
+
+### Session 7: User Guesser Mode Redesign — Card-Based UI
+- **Figma**: node 405-340
+- **Full rewrite** of `UserGuesserMode.jsx` from chat-bubble layout to card-based UI
+- Removed: `messages` array, `messagesEndRef`, `scrollToBottom`, chat-container, `GameMode.css` import
+- Added state: `currentQuestion`, `aiResponse`, `cardKey`, `finalGuessInput`, `finalResult`, `inputRef`
+- Created `UserGuesserMode.css` — lavender background (`#bfbff6`) with decorative gradient blurs, frosted-glass card (262px, white glow), dark navy input box (`#0b2660`), SVG paper plane send icon
+- `.user-guesser-main` wrapper groups AI response (italic serif) + card with shared `margin-top: 256px`
+- **Card animation**: Bubble-rise from input area — starts at `scale(0.6) translate3d(0, 200px, 0)`, opacity reaches 1 at 40%, settles at `scale(1)`. Duration 0.5s with `cubic-bezier(0.2, 0.8, 0.3, 1)` deceleration.
+- **GPU compositing fix**: Base `transform: translate3d(0, 0, 0)` on card prevents stutter when CSS animation ends (avoids compositing layer drop from animation removal)
+- `will-change: transform, opacity` for hardware acceleration
+- Game-end state: final guess input + "Give Up & Reveal" / "Play Again" / "Main Menu" buttons
+- `GameMode.css` no longer used by either mode (legacy)
+- Build verified successful
 
 ---
 
@@ -154,8 +194,11 @@ VITE_USE_MOCK=true                   # true = mock data, false/absent = live API
 | `src/components/AIGuesserMode.jsx` | AI guesser gameplay |
 | `src/components/UserGuesserMode.jsx` | User guesser gameplay |
 | `src/components/ModeSelection.jsx` | Mode selection menu |
-| `src/components/AIGuesserMode.css` | AI guesser card-based styles (Figma) |
-| `src/components/GameMode.css` | UserGuesserMode chat-bubble styles |
+| `src/components/SwipeCard.jsx` | Draggable card with glow + particles |
+| `src/components/SwipeCard.css` | SwipeCard styles + fade-in animation |
+| `src/components/AIGuesserMode.css` | AI guesser layout/button styles |
+| `src/components/UserGuesserMode.css` | User guesser card/input styles |
+| `src/components/GameMode.css` | Legacy chat-bubble styles (unused) |
 | `src/App.jsx` | Root navigation |
 | `.env` | API key + mock toggle |
 
