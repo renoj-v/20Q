@@ -106,55 +106,6 @@
   text-align: center;
 }
 
-/* Card */
-.ai-guesser-card {
-  position: relative;
-  z-index: 2;
-  width: 262px;
-  max-width: 80vw;
-  height: 374px;
-  margin-top: 16px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  box-shadow: 0px 0px 13px 0px white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  animation: cardFadeIn 0.4s ease-out;
-}
-
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.ai-guesser-card-text {
-  font-family: 'Instrument Serif', serif;
-  font-style: italic;
-  font-size: 20px;
-  line-height: 1.53;
-  color: black;
-  text-align: center;
-  white-space: pre-wrap;
-}
-
-/* Loading pulse on card */
-.ai-guesser-card-text.loading {
-  animation: cardPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes cardPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
 /* Answer area */
 .ai-guesser-answers {
   position: relative;
@@ -368,20 +319,9 @@
     margin-top: 80px;
   }
 
-  .ai-guesser-card {
-    width: 240px;
-    height: 320px;
-    padding: 24px;
-  }
-
   .ai-guesser-answers {
     width: 90vw;
     padding-bottom: 24px;
   }
 }
 
-@media (min-height: 800px) {
-  .ai-guesser-card {
-    margin-top: 24px;
-  }
-}

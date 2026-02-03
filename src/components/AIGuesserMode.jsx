@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { initializeAIGuesser, continueAIGuesser } from '../services/claude';
+import SwipeCard, { SWIPE_CONFIG, spawnParticles } from './SwipeCard';
 import './AIGuesserMode.css';
 
 const AIGuesserMode = ({ onBackToMenu }) => {
@@ -11,6 +12,8 @@ const AIGuesserMode = ({ onBackToMenu }) => {
   const [gameEnded, setGameEnded] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [finalMessage, setFinalMessage] = useState('');
+  const [glowOverride, setGlowOverride] = useState(null);
+  const cardRef = useRef(null);
 
   useEffect(() => {
     startGame();
@@ -103,15 +106,21 @@ const AIGuesserMode = ({ onBackToMenu }) => {
         Question {questionCount} of 20
       </div>
 
-      <div className="ai-guesser-card">
-        <p className={`ai-guesser-card-text${isLoading && !currentQuestion ? ' loading' : ''}`}>
-          {isLoading && !currentQuestion
+      <SwipeCard
+        key={questionCount}
+        ref={cardRef}
+        text={
+          isLoading && !currentQuestion
             ? 'Thinking of a question...'
             : gameEnded && finalMessage
               ? finalMessage
-              : currentQuestion}
-        </p>
-      </div>
+              : currentQuestion
+        }
+        isLoading={isLoading && !currentQuestion}
+        onSwipe={handleAnswer}
+        disabled={gameEnded || isLoading}
+        glowOverride={glowOverride}
+      />
 
       {!gameEnded ? (
         <div className={`ai-guesser-answers${isLoading ? ' disabled' : ''}`}>
@@ -125,10 +134,34 @@ const AIGuesserMode = ({ onBackToMenu }) => {
               <span className="label">Yes</span>
             </button>
           </div>
-          <button onClick={() => handleAnswer('Sometimes')} className="ai-guesser-btn">
+          <button
+            onClick={() => {
+              const card = cardRef.current;
+              if (card) {
+                spawnParticles(card.getBoundingClientRect(), 'sometimes', SWIPE_CONFIG.particles);
+                card.dissolve();
+              }
+              setTimeout(() => handleAnswer('Sometimes'), SWIPE_CONFIG.dissolveDuration);
+            }}
+            onPointerEnter={() => setGlowOverride('sometimes')}
+            onPointerLeave={() => setGlowOverride(null)}
+            className="ai-guesser-btn"
+          >
             Sometimes
           </button>
-          <button onClick={() => handleAnswer('Unsure')} className="ai-guesser-btn">
+          <button
+            onClick={() => {
+              const card = cardRef.current;
+              if (card) {
+                spawnParticles(card.getBoundingClientRect(), 'unsure', SWIPE_CONFIG.particles);
+                card.dissolve();
+              }
+              setTimeout(() => handleAnswer('Unsure'), SWIPE_CONFIG.dissolveDuration);
+            }}
+            onPointerEnter={() => setGlowOverride('unsure')}
+            onPointerLeave={() => setGlowOverride(null)}
+            className="ai-guesser-btn"
+          >
             Unsure
           </button>
         </div>
