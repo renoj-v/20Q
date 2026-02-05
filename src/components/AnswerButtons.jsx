@@ -3,6 +3,16 @@ import { SWIPE_CONFIG, spawnParticles } from './SwipeCard';
 import Button from './Button';
 
 const AnswerButtons = ({ onAnswer, cardRef, setGlowOverride, disabled }) => {
+  const handleSwipeAnswer = (direction) => {
+    const card = cardRef.current;
+    if (card) {
+      spawnParticles(card.getBoundingClientRect(), direction, SWIPE_CONFIG.particles);
+      card.swipeOut(direction);
+    }
+    const answer = direction === 'right' ? 'Yes' : 'No';
+    setTimeout(() => onAnswer(answer), SWIPE_CONFIG.dissolveDuration);
+  };
+
   const handleParticleAnswer = (type) => {
     const card = cardRef.current;
     if (card) {
@@ -15,11 +25,11 @@ const AnswerButtons = ({ onAnswer, cardRef, setGlowOverride, disabled }) => {
   return (
     <div className={`ai-guesser-answers${disabled ? ' disabled' : ''}`}>
       <div className="ai-guesser-yesno">
-        <Button onClick={() => onAnswer('No')} className="ai-guesser-no">
+        <Button onClick={() => handleSwipeAnswer('left')} className="ai-guesser-no">
           <span className="arrow">↰</span>
           <span className="label">No</span>
         </Button>
-        <Button onClick={() => onAnswer('Yes')} className="ai-guesser-yes">
+        <Button onClick={() => handleSwipeAnswer('right')} className="ai-guesser-yes">
           <span className="arrow">↱</span>
           <span className="label">Yes</span>
         </Button>

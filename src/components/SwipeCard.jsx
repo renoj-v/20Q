@@ -109,6 +109,11 @@ const SwipeCard = forwardRef(({ text, isLoading, onSwipe, disabled, glowOverride
   useImperativeHandle(ref, () => ({
     getBoundingClientRect: () => cardRef.current?.getBoundingClientRect(),
     dissolve: () => setDissolving(true),
+    swipeOut: (direction) => {
+      const dx = direction === 'right' ? SWIPE_CONFIG.swipeThreshold : -SWIPE_CONFIG.swipeThreshold;
+      setOffset({ x: dx, y: 0 });
+      setDissolving(true);
+    },
   }));
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
