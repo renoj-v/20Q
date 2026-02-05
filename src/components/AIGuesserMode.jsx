@@ -107,7 +107,7 @@ const AIGuesserMode = ({ onBackToMenu }) => {
         Question {questionCount} of 20
       </div>
 
-      <SwipeCard
+      {questionCount > 0 && <SwipeCard
         key={questionCount}
         ref={cardRef}
         text={
@@ -122,6 +122,7 @@ const AIGuesserMode = ({ onBackToMenu }) => {
         disabled={gameEnded || isLoading}
         glowOverride={glowOverride}
       />
+      }
 
       {!gameEnded ? (
         <AnswerButtons
