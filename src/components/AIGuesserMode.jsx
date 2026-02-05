@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { initializeAIGuesser, continueAIGuesser } from '../services/claude';
-import SwipeCard, { SWIPE_CONFIG, spawnParticles } from './SwipeCard';
+import SwipeCard from './SwipeCard';
+import AnswerButtons from './AnswerButtons';
 import './AIGuesserMode.css';
 
 const AIGuesserMode = ({ onBackToMenu }) => {
@@ -123,48 +124,12 @@ const AIGuesserMode = ({ onBackToMenu }) => {
       />
 
       {!gameEnded ? (
-        <div className={`ai-guesser-answers${isLoading ? ' disabled' : ''}`}>
-          <div className="ai-guesser-yesno">
-            <button onClick={() => handleAnswer('No')} className="ai-guesser-no">
-              <span className="arrow">↰</span>
-              <span className="label">No</span>
-            </button>
-            <button onClick={() => handleAnswer('Yes')} className="ai-guesser-yes">
-              <span className="arrow">↱</span>
-              <span className="label">Yes</span>
-            </button>
-          </div>
-          <button
-            onClick={() => {
-              const card = cardRef.current;
-              if (card) {
-                spawnParticles(card.getBoundingClientRect(), 'sometimes', SWIPE_CONFIG.particles);
-                card.dissolve();
-              }
-              setTimeout(() => handleAnswer('Sometimes'), SWIPE_CONFIG.dissolveDuration);
-            }}
-            onPointerEnter={() => setGlowOverride('sometimes')}
-            onPointerLeave={() => setGlowOverride(null)}
-            className="ai-guesser-btn"
-          >
-            Sometimes
-          </button>
-          <button
-            onClick={() => {
-              const card = cardRef.current;
-              if (card) {
-                spawnParticles(card.getBoundingClientRect(), 'unsure', SWIPE_CONFIG.particles);
-                card.dissolve();
-              }
-              setTimeout(() => handleAnswer('Unsure'), SWIPE_CONFIG.dissolveDuration);
-            }}
-            onPointerEnter={() => setGlowOverride('unsure')}
-            onPointerLeave={() => setGlowOverride(null)}
-            className="ai-guesser-btn"
-          >
-            Unsure
-          </button>
-        </div>
+        <AnswerButtons
+          onAnswer={handleAnswer}
+          cardRef={cardRef}
+          setGlowOverride={setGlowOverride}
+          disabled={isLoading}
+        />
       ) : (
         <div className="ai-guesser-end">
           <h3>Game Over!</h3>
