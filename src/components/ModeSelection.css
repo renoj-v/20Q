@@ -1,119 +1,239 @@
+/* Mode Selection — matching AIGuesser / UserGuesser design */
+
 .mode-selection {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #bfbff6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Decorative gradient background shapes */
+.mode-selection::before,
+.mode-selection::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.mode-selection::before {
+  width: 600px;
+  height: 600px;
+  top: -100px;
+  left: -200px;
+  background: radial-gradient(ellipse at center, #3a5ba0 0%, #2a3a7c 40%, transparent 70%);
+}
+
+.mode-selection::after {
+  width: 700px;
+  height: 700px;
+  bottom: -150px;
+  right: -200px;
+  background: radial-gradient(ellipse at center, #5a7cbf 0%, #3a5090 30%, transparent 70%);
+}
+
+/* Extra decorative layer */
+.mode-selection-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mode-selection-bg::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 30%;
+  left: -100px;
+  background: radial-gradient(ellipse at center, #4a6aaa 0%, transparent 60%);
+  filter: blur(60px);
+  opacity: 0.4;
+}
+
+.mode-selection-bg::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 500px;
+  top: 10%;
+  right: -50px;
+  background: radial-gradient(ellipse at center, #2a4a8a 0%, transparent 60%);
+  filter: blur(60px);
+  opacity: 0.35;
+}
+
+/* Title */
+.mode-title {
+  position: relative;
+  z-index: 2;
+  margin-top: 64px;
+  margin-bottom: 4px;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 48px;
+  color: #0c0e10;
+  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
   text-align: center;
 }
 
-.mode-selection h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  color: #333;
+.mode-subtitle {
+  position: relative;
+  z-index: 2;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 16px;
+  color: rgba(12, 14, 16, 0.7);
+  margin-bottom: 40px;
+  text-align: center;
 }
 
-.subtitle {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 3rem;
-}
-
+/* Cards container */
 .mode-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 24px;
+  padding: 0 24px;
+  max-width: 600px;
+  width: 100%;
 }
 
+/* Card — matching swipe-card / user-guesser-card style */
 .mode-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  box-shadow: 0px 0px 13px 0px rgba(255, 255, 255, 0.6);
+  padding: 32px 24px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: modeCardFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes modeCardFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .mode-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0px 0px 20px 2px rgba(255, 255, 255, 0.75);
 }
 
-.mode-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+.mode-card:active {
+  transform: scale(0.98);
 }
 
 .mode-card h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: #333;
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: #0c0e10;
+  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  margin-bottom: 12px;
+  line-height: 1.2;
 }
 
 .mode-card p {
-  color: #666;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(12, 14, 16, 0.7);
+  margin-bottom: 20px;
+  flex: 1;
 }
 
-.mode-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
+/* Play button inside cards */
+.mode-btn {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #0c0e10;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.mode-button:hover {
-  background: #0056b3;
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-.instructions {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-top: 2rem;
+.mode-btn:active {
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.instructions h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #333;
+/* Instructions */
+.mode-instructions {
+  position: relative;
+  z-index: 2;
+  margin-top: 32px;
+  margin-bottom: 40px;
+  max-width: 340px;
+  text-align: center;
 }
 
-.instructions ul {
+.mode-instructions h3 {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: #0c0e10;
+  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  margin-bottom: 12px;
+}
+
+.mode-instructions ul {
   list-style: none;
   padding: 0;
-  text-align: left;
-  max-width: 500px;
-  margin: 0 auto;
+  margin: 0;
 }
 
-.instructions li {
-  padding: 0.5rem 0;
-  color: #555;
-  font-size: 1.1rem;
+.mode-instructions li {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(12, 14, 16, 0.65);
+  padding: 4px 0;
+  line-height: 1.5;
 }
 
-.instructions li:before {
-  content: "✓ ";
-  color: #28a745;
-  font-weight: bold;
-  margin-right: 0.5rem;
+.mode-instructions li::before {
+  content: '— ';
 }
 
-@media (max-width: 768px) {
-  .mode-selection h1 {
-    font-size: 2rem;
+/* Responsive */
+@media (max-width: 560px) {
+  .mode-title {
+    margin-top: 60px;
+    font-size: 36px;
   }
 
   .mode-cards {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 20px;
   }
 
-  .instructions ul {
-    text-align: center;
+  .mode-card {
+    padding: 24px 20px;
+  }
+
+  .mode-instructions {
+    margin-bottom: 24px;
   }
 }
