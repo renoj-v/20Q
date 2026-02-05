@@ -14,6 +14,7 @@ const AIGuesserMode = ({ onBackToMenu }) => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [finalMessage, setFinalMessage] = useState('');
   const [glowOverride, setGlowOverride] = useState(null);
+  const [guessResult, setGuessResult] = useState(null); // 'correct' | 'incorrect' | null
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const AIGuesserMode = ({ onBackToMenu }) => {
       setError(null);
       setGameEnded(false);
       setFinalMessage('');
+      setGuessResult(null);
 
       const { firstQuestion, systemPrompt: prompt } = await initializeAIGuesser();
 
@@ -133,12 +135,30 @@ const AIGuesserMode = ({ onBackToMenu }) => {
         />
       ) : (
         <div className="ai-guesser-end">
-          <h3>Game Over!</h3>
-          <p>Did the AI guess correctly?</p>
-          <div className="ai-guesser-end-buttons">
-            <button onClick={startGame} className="ai-guesser-end-btn">Play Again</button>
-            <button onClick={onBackToMenu} className="ai-guesser-end-btn">Main Menu</button>
-          </div>
+          {guessResult === null ? (
+            <>
+              <h3>Did I get it right?</h3>
+              <div className="ai-guesser-end-yesno">
+                <button onClick={() => setGuessResult('incorrect')} className="ai-guesser-end-no">
+                  <span className="arrow">↰</span>
+                  <span className="label">No</span>
+                </button>
+                <button onClick={() => setGuessResult('correct')} className="ai-guesser-end-yes">
+                  <span className="arrow">↱</span>
+                  <span className="label">Yes</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h3>{guessResult === 'correct' ? 'I got it!' : 'Better luck next time!'}</h3>
+              <p>{guessResult === 'correct' ? 'Thanks for playing!' : 'I\'ll try harder next time.'}</p>
+              <div className="ai-guesser-end-buttons">
+                <button onClick={startGame} className="ai-guesser-end-btn">Play Again</button>
+                <button onClick={onBackToMenu} className="ai-guesser-end-btn">Main Menu</button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

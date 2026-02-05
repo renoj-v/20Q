@@ -179,7 +179,6 @@
 
 .ai-guesser-no .arrow {
   align-self: flex-start;
-  transform: scaleX(-1);
   margin-bottom: 2px;
 }
 
@@ -235,6 +234,77 @@
   font-size: var(--text-sm);
   color: var(--color-text-white-muted);
   margin-bottom: 24px;
+}
+
+/* Yes/No buttons for end screen */
+.ai-guesser-end-yesno {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 24px;
+}
+
+.ai-guesser-end-no,
+.ai-guesser-end-yes {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  transition: transform var(--transition-fast);
+}
+
+.ai-guesser-end-no:hover,
+.ai-guesser-end-yes:hover {
+  transform: scale(1.1);
+}
+
+.ai-guesser-end-no:focus,
+.ai-guesser-end-yes:focus {
+  outline: var(--outline-focus);
+  outline-offset: 4px;
+}
+
+.ai-guesser-end-no:active,
+.ai-guesser-end-yes:active {
+  transform: scale(0.95);
+}
+
+.ai-guesser-end-no .label,
+.ai-guesser-end-yes .label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-3xl);
+  color: var(--color-text-white);
+  text-shadow: var(--glow-text);
+  line-height: 1;
+}
+
+.ai-guesser-end-no .label {
+  transform: rotate(-7.45deg);
+}
+
+.ai-guesser-end-yes .label {
+  transform: rotate(14.24deg);
+}
+
+.ai-guesser-end-no .arrow,
+.ai-guesser-end-yes .arrow {
+  font-size: var(--text-xs);
+  color: var(--color-text-white);
+  line-height: 1;
+}
+
+.ai-guesser-end-no .arrow {
+  align-self: flex-start;
+  margin-bottom: 2px;
+}
+
+.ai-guesser-end-yes .arrow {
+  align-self: flex-end;
+  margin-bottom: 2px;
 }
 
 .ai-guesser-end-buttons {
