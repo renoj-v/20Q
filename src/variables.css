@@ -1,0 +1,67 @@
+/* Design System Variables */
+
+:root {
+  /* ─── Fonts ─── */
+  --font-serif: 'Instrument Serif', serif;
+  --font-sans: 'Instrument Sans', sans-serif;
+  --font-input: 'Inter', 'Instrument Sans', sans-serif;
+
+  /* ─── Font Sizes ─── */
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-base: 18px;
+  --text-md: 20px;
+  --text-lg: 22px;
+  --text-xl: 28px;
+  --text-2xl: 32px;
+  --text-3xl: 35px;
+  --text-4xl: 48px;
+
+  /* ─── Colors ─── */
+  /* Background */
+  --bg-primary: #bfbff6;
+  --bg-card: rgba(255, 255, 255, 0.5);
+  --bg-input: #0b2660;
+  --bg-overlay: rgba(255, 255, 255, 0.1);
+  --bg-overlay-hover: rgba(255, 255, 255, 0.15);
+  --bg-overlay-active: rgba(255, 255, 255, 0.25);
+
+  /* Text */
+  --color-text: #0c0e10;
+  --color-text-muted: rgba(12, 14, 16, 0.7);
+  --color-text-subtle: rgba(12, 14, 16, 0.65);
+  --color-text-white: white;
+  --color-text-white-muted: rgba(255, 255, 255, 0.8);
+  --color-text-white-subtle: rgba(255, 255, 255, 0.7);
+  --color-text-white-dim: rgba(255, 255, 255, 0.4);
+
+  /* Borders */
+  --color-border: #0c0e10;
+  --color-border-light: rgba(255, 255, 255, 0.6);
+  --color-border-input: #9aa8c6;
+  --color-border-input-focus: #b0bfdf;
+
+  /* Decorative gradients */
+  --gradient-orb-1: radial-gradient(ellipse at center, #3a5ba0 0%, #2a3a7c 40%, transparent 70%);
+  --gradient-orb-2: radial-gradient(ellipse at center, #5a7cbf 0%, #3a5090 30%, transparent 70%);
+  --gradient-orb-3: radial-gradient(ellipse at center, #4a6aaa 0%, transparent 60%);
+  --gradient-orb-4: radial-gradient(ellipse at center, #2a4a8a 0%, transparent 60%);
+
+  /* Glow / Shadows */
+  --glow-text: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  --glow-card: 0px 0px 13px 0px rgba(255, 255, 255, 0.6);
+  --glow-card-hover: 0px 0px 20px 2px rgba(255, 255, 255, 0.75);
+  --glow-input: 0px 0px 18px 12px rgba(255, 255, 255, 0.25);
+
+  /* Focus outline */
+  --outline-focus: 1px solid rgba(255, 255, 255, 0.4);
+
+  /* ─── Spacing ─── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* ─── Transitions ─── */
+  --transition-fast: 0.15s;
+  --transition-normal: 0.2s;
+  --transition-slow: 0.3s;
+}
