@@ -19,18 +19,18 @@ const ModeSelection = ({ onSelectMode }) => {
       <p className="mode-subtitle">Choose your game mode</p>
 
       <div className="mode-cards">
-        <div className="mode-card" onClick={() => onSelectMode('ai-guesser')}>
+        <div className="mode-card" >
           <h2>AI Guesser</h2>
           <p>Think of an object and let Claude AI guess it by asking you questions</p>
-          <Button className="mode-btn" onClick={(e) => e.stopPropagation()}>
+          <Button className="mode-btn" onClick={() => onSelectMode('ai-guesser')}>
             Play as Thinker
           </Button>
         </div>
 
-        <div className="mode-card" onClick={() => onSelectMode('user-guesser')}>
+        <div className="mode-card" >
           <h2>User Guesser</h2>
           <p>Claude AI thinks of an object and you try to guess it by asking questions</p>
-          <Button className="mode-btn" onClick={(e) => e.stopPropagation()}>
+          <Button className="mode-btn" onClick={() => onSelectMode('user-guesser')}>
             Play as Guesser
           </Button>
         </div>
