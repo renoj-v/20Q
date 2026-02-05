@@ -1,10 +1,11 @@
 /* AI Guesser Mode — Card-based design matching Figma */
+@import '../variables.css';
 
 .ai-guesser {
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #bfbff6;
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +28,7 @@
   height: 600px;
   top: -100px;
   left: -200px;
-  background: radial-gradient(ellipse at center, #3a5ba0 0%, #2a3a7c 40%, transparent 70%);
+  background: var(--gradient-orb-1);
 }
 
 .ai-guesser::after {
@@ -35,7 +36,7 @@
   height: 700px;
   bottom: -150px;
   right: -200px;
-  background: radial-gradient(ellipse at center, #5a7cbf 0%, #3a5090 30%, transparent 70%);
+  background: var(--gradient-orb-2);
 }
 
 /* Extra decorative layer via wrapper */
@@ -53,7 +54,7 @@
   height: 500px;
   top: 30%;
   left: -100px;
-  background: radial-gradient(ellipse at center, #4a6aaa 0%, transparent 60%);
+  background: var(--gradient-orb-3);
   filter: blur(60px);
   opacity: 0.4;
 }
@@ -65,7 +66,7 @@
   height: 500px;
   top: 10%;
   right: -50px;
-  background: radial-gradient(ellipse at center, #2a4a8a 0%, transparent 60%);
+  background: var(--gradient-orb-4);
   filter: blur(60px);
   opacity: 0.35;
 }
@@ -78,20 +79,20 @@
   z-index: 10;
   background: none;
   border: none;
-  color: rgba(0, 0, 0, 0.7);
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
   cursor: pointer;
   padding: 8px;
-  transition: color 0.2s;
+  transition: color var(--transition-normal);
 }
 
 .ai-guesser-back:hover {
-  color: white;
+  color: var(--color-text-white);
 }
 
 .ai-guesser-back:focus {
-  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
@@ -100,9 +101,9 @@
   position: relative;
   z-index: 2;
   margin-top: 120px;
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 16px;
-  color: rgb(20, 19, 19);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text);
   text-align: center;
 }
 
@@ -153,11 +154,11 @@
 
 .ai-guesser-no .label,
 .ai-guesser-yes .label {
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 35px;
-  color: #0c0e10;
-  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  font-size: var(--text-3xl);
+  color: var(--color-text);
+  text-shadow: var(--glow-text);
   line-height: 1;
 }
 
@@ -171,8 +172,8 @@
 
 .ai-guesser-no .arrow,
 .ai-guesser-yes .arrow {
-  font-size: 14px;
-  color: #0c0e10;
+  font-size: var(--text-xs);
+  color: var(--color-text);
   line-height: 1;
 }
 
@@ -191,19 +192,19 @@
 .ai-guesser-btn {
   width: 100%;
   height: 44px;
-  border: 1px solid #0c0e10;
-  font-size: 20px;
+  border: 1px solid var(--color-border);
+  font-size: var(--text-md);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .ai-guesser-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--bg-overlay-hover);
 }
 
 .ai-guesser-btn:active {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--bg-overlay-active);
 }
 
 .ai-guesser-btn + .ai-guesser-btn {
@@ -222,17 +223,17 @@
 }
 
 .ai-guesser-end h3 {
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 32px;
-  color: white;
+  font-size: var(--text-2xl);
+  color: var(--color-text-white);
   margin-bottom: 8px;
 }
 
 .ai-guesser-end p {
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-white-muted);
   margin-bottom: 24px;
 }
 
@@ -245,23 +246,23 @@
 .ai-guesser-end-btn {
   width: 100%;
   height: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-family: 'Instrument Serif', serif;
+  border: 1px solid var(--color-border-light);
+  background: var(--bg-overlay);
+  color: var(--color-text-white);
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 20px;
+  font-size: var(--text-md);
   cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.15s;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
 }
 
 .ai-guesser-end-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--bg-overlay-hover);
 }
 
 .ai-guesser-end-btn:focus {
-  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
@@ -276,17 +277,17 @@
 }
 
 .ai-guesser-error h2 {
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 28px;
-  color: white;
+  font-size: var(--text-xl);
+  color: var(--color-text-white);
   margin-bottom: 12px;
 }
 
 .ai-guesser-error p {
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-white-subtle);
   margin-bottom: 16px;
 }
 
@@ -307,4 +308,3 @@
     padding-bottom: 24px;
   }
 }
-

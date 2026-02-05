@@ -1,10 +1,11 @@
 /* Mode Selection — matching AIGuesser / UserGuesser design */
+@import '../variables.css';
 
 .mode-selection {
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #bfbff6;
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +28,7 @@
   height: 600px;
   top: -100px;
   left: -200px;
-  background: radial-gradient(ellipse at center, #3a5ba0 0%, #2a3a7c 40%, transparent 70%);
+  background: var(--gradient-orb-1);
 }
 
 .mode-selection::after {
@@ -35,7 +36,7 @@
   height: 700px;
   bottom: -150px;
   right: -200px;
-  background: radial-gradient(ellipse at center, #5a7cbf 0%, #3a5090 30%, transparent 70%);
+  background: var(--gradient-orb-2);
 }
 
 /* Extra decorative layer */
@@ -53,7 +54,7 @@
   height: 500px;
   top: 30%;
   left: -100px;
-  background: radial-gradient(ellipse at center, #4a6aaa 0%, transparent 60%);
+  background: var(--gradient-orb-3);
   filter: blur(60px);
   opacity: 0.4;
 }
@@ -65,7 +66,7 @@
   height: 500px;
   top: 10%;
   right: -50px;
-  background: radial-gradient(ellipse at center, #2a4a8a 0%, transparent 60%);
+  background: var(--gradient-orb-4);
   filter: blur(60px);
   opacity: 0.35;
 }
@@ -76,20 +77,20 @@
   z-index: 2;
   margin-top: 64px;
   margin-bottom: 4px;
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 48px;
-  color: #0c0e10;
-  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  font-size: var(--text-4xl);
+  color: var(--color-text);
+  text-shadow: var(--glow-text);
   text-align: center;
 }
 
 .mode-subtitle {
   position: relative;
   z-index: 2;
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 16px;
-  color: rgba(12, 14, 16, 0.7);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   margin-bottom: 40px;
   text-align: center;
 }
@@ -108,16 +109,16 @@
 /* Card — matching swipe-card / user-guesser-card style */
 .mode-card {
   flex: 1;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  box-shadow: 0px 0px 13px 0px rgba(255, 255, 255, 0.6);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glow-card);
   padding: 32px 24px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--transition-normal) ease, box-shadow var(--transition-normal) ease;
   animation: modeCardFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
@@ -134,7 +135,7 @@
 
 .mode-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0px 0px 20px 2px rgba(255, 255, 255, 0.75);
+  box-shadow: var(--glow-card-hover);
 }
 
 .mode-card:active {
@@ -142,20 +143,20 @@
 }
 
 .mode-card h2 {
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 28px;
-  color: #0c0e10;
-  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  font-size: var(--text-xl);
+  color: var(--color-text);
+  text-shadow: var(--glow-text);
   margin-bottom: 12px;
   line-height: 1.2;
 }
 
 .mode-card p {
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
   line-height: 1.5;
-  color: rgba(12, 14, 16, 0.7);
+  color: var(--color-text-muted);
   margin-bottom: 20px;
   flex: 1;
 }
@@ -164,19 +165,19 @@
 .mode-btn {
   width: 100%;
   height: 44px;
-  border: 1px solid #0c0e10;
-  font-size: 18px;
+  border: 1px solid var(--color-border);
+  font-size: var(--text-base);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .mode-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--bg-overlay-hover);
 }
 
 .mode-btn:active {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--bg-overlay-active);
 }
 
 /* Instructions */
@@ -190,11 +191,11 @@
 }
 
 .mode-instructions h3 {
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
-  color: #0c0e10;
-  text-shadow: 0px 0px 9px rgba(255, 255, 255, 0.5);
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  text-shadow: var(--glow-text);
   margin-bottom: 12px;
 }
 
@@ -205,9 +206,9 @@
 }
 
 .mode-instructions li {
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
-  color: rgba(12, 14, 16, 0.65);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-subtle);
   padding: 4px 0;
   line-height: 1.5;
 }
