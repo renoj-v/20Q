@@ -1,6 +1,7 @@
-/* User Guesser Mode — Card-based design matching Figma */
+/* User Guesser Mode — Chat-based design */
 @import '../variables.css';
 
+/* ─── Container ─── */
 .user-guesser {
   position: relative;
   width: 100%;
@@ -71,7 +72,7 @@
   opacity: 0.35;
 }
 
-/* Back button */
+/* ─── Back button ─── */
 .user-guesser-back {
   position: absolute;
   top: 16px;
@@ -96,88 +97,272 @@
   outline-offset: 2px;
 }
 
-/* Wrapper for AI response + card */
-.user-guesser-main {
+/* ─── Previous questions top section ─── */
+.user-guesser-top {
   position: relative;
-  z-index: 2;
-  margin-top: 256px;
+  z-index: 5;
+  width: 262px;
+  max-width: 80vw;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Question card — user's question displayed */
-.user-guesser-card {
+/* Panel: collapsed shows last 2 items, expanded shows all */
+.prev-questions-panel {
+  width: 100%;
+  max-height: 86px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: max-height 0.3s ease;
+}
+
+.prev-questions-panel.expanded {
+  max-height: 430px;
+}
+
+/* Individual prev question row */
+.prev-question {
+  width: 100%;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
   position: relative;
-  z-index: 2;
-  width: 262px;
-  max-width: 80vw;
-  min-height: 200px;
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-  box-shadow: var(--glow-card);
+}
+
+.prev-question + .prev-question {
+  border-top: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+
+.prev-question:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.prev-question p {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 30.554px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 198px;
+}
+
+/* ── Prev question answer-type colors ── */
+
+/* Yes — green (from AIGuesser glow: rgba(72, 199, 108)) */
+.prev-question--yes {
+  background: #c0f0ce;
+  box-shadow: 0 0 12px 0 rgba(72, 199, 108, 0.35);
+}
+.prev-question--yes p {
+  color: #0a3d1a;
+}
+
+/* No — red (from AIGuesser glow: rgba(220, 60, 60)) */
+.prev-question--no {
+  background: #f5c5c5;
+  box-shadow: 0 0 12px 0 rgba(220, 60, 60, 0.35);
+}
+.prev-question--no p {
+  color: #4c0a0a;
+}
+
+/* Sometimes — yellow (from AIGuesser glow: rgba(240, 200, 40)) */
+.prev-question--sometimes {
+  background: #f5eab4;
+  box-shadow: 0 0 12px 0 rgba(240, 200, 40, 0.35);
+}
+.prev-question--sometimes p {
+  color: #4c3d05;
+}
+
+/* Unsure — white (from AIGuesser glow: rgba(255, 255, 255)) */
+.prev-question--unsure {
+  background: rgba(240, 240, 255, 0.75);
+  box-shadow: 0 0 12px 0 rgba(255, 255, 255, 0.3);
+}
+.prev-question--unsure p {
+  color: #0c0e10;
+}
+
+/* ─── Pull-down button ─── */
+.pull-down-btn {
+  margin-top: 4px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
-  animation: userCardFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
-  will-change: transform, opacity;
-  transform: translate3d(0, 0, 0);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-@keyframes userCardFadeIn {
+.pull-down-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.pull-down-btn:focus {
+  outline: var(--outline-focus);
+  outline-offset: 2px;
+}
+
+.pull-down-chevron {
+  transition: transform 0.3s ease;
+}
+
+.pull-down-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+/* Pull-down button answer-type gradient + glow */
+.pull-down-btn--yes {
+  background: linear-gradient(180deg, rgba(72, 199, 108, 0.5), rgba(72, 199, 108, 0.15));
+  box-shadow: 0 0 10px rgba(72, 199, 108, 0.4);
+  color: #0a3d1a;
+}
+.pull-down-btn--yes:hover {
+  background: linear-gradient(180deg, rgba(72, 199, 108, 0.65), rgba(72, 199, 108, 0.25));
+}
+
+.pull-down-btn--no {
+  background: linear-gradient(180deg, rgba(220, 60, 60, 0.5), rgba(220, 60, 60, 0.15));
+  box-shadow: 0 0 10px rgba(220, 60, 60, 0.4);
+  color: #4c0a0a;
+}
+.pull-down-btn--no:hover {
+  background: linear-gradient(180deg, rgba(220, 60, 60, 0.65), rgba(220, 60, 60, 0.25));
+}
+
+.pull-down-btn--sometimes {
+  background: linear-gradient(180deg, rgba(240, 200, 40, 0.5), rgba(240, 200, 40, 0.15));
+  box-shadow: 0 0 10px rgba(240, 200, 40, 0.4);
+  color: #4c3d05;
+}
+.pull-down-btn--sometimes:hover {
+  background: linear-gradient(180deg, rgba(240, 200, 40, 0.65), rgba(240, 200, 40, 0.25));
+}
+
+.pull-down-btn--unsure {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.15));
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  color: #0c0e10;
+}
+.pull-down-btn--unsure:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.25));
+}
+
+/* ─── Chat area ─── */
+.user-guesser-chat {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 375px;
+  padding: 0 24px;
+}
+
+/* ─── Chat bubbles ─── */
+.chat-bubble {
+  max-width: 262px;
+  padding: 32px;
+  animation: bubbleFadeIn 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.chat-bubble p {
+  font-size: var(--text-md);
+  line-height: 1.53;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+@keyframes bubbleFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.6) translate3d(0, 200px, 0);
-  }
-  40% {
-    opacity: 1;
+    transform: translateY(16px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: scale(1) translate3d(0, 0, 0);
+    transform: translateY(0) scale(1);
   }
 }
 
-.user-guesser-card-text {
-  font-family: var(--font-sans);
-  font-size: var(--text-md);
-  line-height: 1.53;
-  color: var(--color-text);
-  text-align: center;
-  white-space: pre-wrap;
+/* AI bubble — left-aligned, tail at bottom-left */
+.chat-bubble--ai {
+  align-self: flex-start;
+  border-radius: 24px 24px 24px 0;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 14px 0 rgba(255, 255, 255, 0.6);
 }
 
-/* AI response above the card */
-.user-guesser-response {
-  position: relative;
-  z-index: 2;
-  margin-bottom: 0;
+.chat-bubble--ai p {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: var(--text-md);
-  line-height: 1.53;
   color: var(--color-text);
-  text-align: center;
-  max-width: 262px;
-  animation: responseFadeIn 0.3s ease-out;
+  text-align: right;
 }
 
-@keyframes responseFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* AI thinking state pulse */
+.chat-bubble--ai.thinking {
+  animation: bubbleFadeIn 0.4s cubic-bezier(0.2, 0.8, 0.3, 1), thinkingPulse 1.5s ease-in-out 0.4s infinite;
 }
 
-.user-guesser-response.loading {
-  animation: responsePulse 1.5s ease-in-out infinite;
-}
-
-@keyframes responsePulse {
+@keyframes thinkingPulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.5; }
 }
 
-/* Question counter */
+/* AI bubble answer-type colors */
+.chat-bubble--yes {
+  background: rgba(200, 245, 215, 0.9);
+  box-shadow: 0 0 14px 0 rgba(72, 199, 108, 0.55);
+}
+
+.chat-bubble--no {
+  background: rgba(250, 200, 200, 0.9);
+  box-shadow: 0 0 14px 0 rgba(220, 60, 60, 0.55);
+}
+
+.chat-bubble--sometimes {
+  background: rgba(250, 240, 190, 0.9);
+  box-shadow: 0 0 14px 0 rgba(240, 200, 40, 0.55);
+}
+
+.chat-bubble--unsure {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 14px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* User bubble — right-aligned, tail at bottom-right */
+.chat-bubble--user {
+  align-self: flex-end;
+  border-radius: 24px 24px 0 16px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 14px 0 rgba(255, 255, 255, 0.6);
+}
+
+.chat-bubble--user p {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+}
+
+.chat-bubble--placeholder {
+  opacity: 0.6;
+}
+
+/* ─── Question counter ─── */
 .user-guesser-counter {
   position: relative;
   z-index: 2;
@@ -188,7 +373,7 @@
   text-align: center;
 }
 
-/* Textbox area */
+/* ─── Textbox area ─── */
 .user-guesser-input-area {
   position: relative;
   z-index: 2;
@@ -275,7 +460,7 @@
   fill: var(--color-text-white);
 }
 
-/* Game end overlay */
+/* ─── Game end overlay ─── */
 .user-guesser-end {
   position: relative;
   z-index: 2;
@@ -379,7 +564,7 @@
   cursor: not-allowed;
 }
 
-/* Error state */
+/* ─── Error state ─── */
 .user-guesser-error {
   position: relative;
   z-index: 2;
@@ -404,19 +589,19 @@
   margin-bottom: 16px;
 }
 
-/* Disabled state */
+/* ─── Disabled state ─── */
 .user-guesser-input-area.disabled {
   opacity: 0.4;
   pointer-events: none;
 }
 
-/* Responsive */
+/* ─── Responsive ─── */
 @media (max-width: 400px) {
-  .user-guesser-main {
-    margin-top: 180px;
-  }
-
   .user-guesser-input-area {
     width: 92vw;
+  }
+
+  .user-guesser-top {
+    width: 90vw;
   }
 }

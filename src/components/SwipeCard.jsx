@@ -45,7 +45,7 @@ export const SWIPE_CONFIG = {
 // Hue ranges for particle colors by direction/type
 const PARTICLE_HUES = {
   right:     { base: 140, range: 30 },  // green
-  left:      { base: 0,   range: 20 },  // red
+  left:      { base: 341,   range: 20 },  // red
   sometimes: { base: 45,  range: 20 },  // yellow/amber
   unsure:    { base: 0,   range: 360, saturation: 0, lightness: 85 }, // white
 };
@@ -87,15 +87,25 @@ export function spawnParticles(rect, direction, config) {
       width:${size}px;height:${size}px;
       border-radius:50%;
       background:hsl(${hue},${sat}%,${lightness}%);
-      opacity:1;pointer-events:none;
+      opacity:1;
+      pointer-events:none;
       transition:transform ${lifetime}ms cubic-bezier(.15,.8,.3,1),opacity ${lifetime}ms ease-out;
     `;
+    
+
+    const dotBG = document.createElement('div');
+    dotBG.style.cssText = dot.style.cssText;
+    dotBG.style.filter = 'blur(15px)';
+
+    container.appendChild(dotBG);
     container.appendChild(dot);
 
     dot.getBoundingClientRect();
     requestAnimationFrame(() => {
       dot.style.transform = `translate(${Math.cos(angle) * distance}px,${Math.sin(angle) * distance}px) scale(0.2)`;
       dot.style.opacity = '0';
+      dotBG.style.transform = `translate(${Math.cos(angle) * distance}px,${Math.sin(angle) * distance}px) scale(0.2)`;
+      dotBG.style.opacity = '0';
     });
   }
 

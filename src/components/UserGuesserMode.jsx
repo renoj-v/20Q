@@ -2,6 +2,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import { initializeUserGuesser, answerUserQuestion } from '../services/claude';
 import './UserGuesserMode.css';
 
+// Detect answer type from AI response
+function getAnswerType(response) {
+  const lower = response.toLowerCase().trim();
+  if (lower.startsWith('yes')) return 'yes';
+  if (lower.startsWith('no')) return 'no';
+  if (lower.startsWith('maybe') || lower.startsWith('sometimes')) return 'sometimes';
+  return 'unsure';
+}
+
+// Shorten question text for the prev-questions log
+function shortenQuestion(question, answerType) {
+  let stripped = question.replace(/\?+$/, '').trim();
+  stripped = stripped.replace(/^is it\s+/i, '');
+  switch (answerType) {
+    case 'yes': return `Is ${stripped}`;
+    case 'no': return `Not ${stripped}`;
+    case 'sometimes': return `Sometimes ${stripped}`;
+    case 'unsure': return `Unsure if ${stripped}`;
+    default: return stripped;
+  }
+}
+
 const UserGuesserMode = ({ onBackToMenu }) => {
   const [conversationHistory, setConversationHistory] = useState([]);
   const [systemPrompt, setSystemPrompt] = useState('');
@@ -13,10 +35,14 @@ const UserGuesserMode = ({ onBackToMenu }) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [aiResponse, setAiResponse] = useState('');
-  const [cardKey, setCardKey] = useState(0);
   const [finalGuessInput, setFinalGuessInput] = useState('');
   const [finalResult, setFinalResult] = useState('');
   const inputRef = useRef(null);
+
+  // Chat-based design state
+  const [questionLog, setQuestionLog] = useState([]);
+  const [showPrevQuestions, setShowPrevQuestions] = useState(false);
+  const [currentAnswerType, setCurrentAnswerType] = useState(null);
 
   useEffect(() => {
     initializeGame();
@@ -38,6 +64,9 @@ const UserGuesserMode = ({ onBackToMenu }) => {
       setQuestionCount(0);
       setFinalResult('');
       setFinalGuessInput('');
+      setQuestionLog([]);
+      setShowPrevQuestions(false);
+      setCurrentAnswerType(null);
 
       const { response, systemPrompt: prompt } = await initializeUserGuesser();
 
@@ -66,9 +95,20 @@ const UserGuesserMode = ({ onBackToMenu }) => {
 
       const question = userInput;
       setUserInput('');
+
+      // Archive previous Q&A to the log
+      if (currentQuestion && aiResponse) {
+        const prevAnswerType = getAnswerType(aiResponse);
+        setQuestionLog(prev => [...prev, {
+          question: currentQuestion,
+          answerType: prevAnswerType,
+          shortenedText: shortenQuestion(currentQuestion, prevAnswerType),
+        }]);
+      }
+
       setCurrentQuestion(question);
       setAiResponse('');
-      setCardKey(prev => prev + 1);
+      setCurrentAnswerType(null);
 
       const newQuestionCount = questionCount + 1;
       setQuestionCount(newQuestionCount);
@@ -81,7 +121,9 @@ const UserGuesserMode = ({ onBackToMenu }) => {
       const updatedHistory = [...conversationHistory, { role: 'user', content: questionWithCount }];
       const aiResp = await answerUserQuestion(updatedHistory, systemPrompt);
 
+      const answerType = getAnswerType(aiResp);
       setAiResponse(aiResp);
+      setCurrentAnswerType(answerType);
       setConversationHistory([...updatedHistory, { role: 'assistant', content: aiResp }]);
 
       if (newQuestionCount >= 20) {
@@ -142,6 +184,24 @@ const UserGuesserMode = ({ onBackToMenu }) => {
     }
   };
 
+  // Pull-down button color = last archived answer type
+  const lastLogAnswerType = questionLog.length > 0
+    ? questionLog[questionLog.length - 1].answerType
+    : null;
+
+  // Determine AI bubble content and styling
+  let aiBubbleContent = null;
+  let aiBubbleType = null;
+  let aiBubbleThinking = false;
+
+  if (isLoading && currentQuestion) {
+    aiBubbleContent = 'hmmm...';
+    aiBubbleThinking = true;
+  } else if (aiResponse) {
+    aiBubbleContent = aiResponse;
+    aiBubbleType = currentAnswerType;
+  }
+
   if (error) {
     return (
       <div className="user-guesser">
@@ -162,36 +222,63 @@ const UserGuesserMode = ({ onBackToMenu }) => {
       <div className="user-guesser-bg" />
       <button onClick={onBackToMenu} className="user-guesser-back">&larr; Back</button>
 
-      <div className="user-guesser-main">
-        {/* AI response above the card */}
-        {aiResponse && (
-          <div className={`user-guesser-response${isLoading ? ' loading' : ''}`}>
-            {aiResponse}
+      {/* Previous questions panel */}
+      {questionLog.length > 0 && (
+        <div className="user-guesser-top">
+          <div className={`prev-questions-panel${showPrevQuestions ? ' expanded' : ''}`}>
+            {questionLog.map((entry, i) => (
+              <div
+                key={i}
+                className={`prev-question prev-question--${entry.answerType}`}
+              >
+                <p>{entry.shortenedText}</p>
+              </div>
+            ))}
+          </div>
+          <button
+            className={`pull-down-btn${lastLogAnswerType ? ` pull-down-btn--${lastLogAnswerType}` : ''}`}
+            onClick={() => setShowPrevQuestions(!showPrevQuestions)}
+          >
+            <svg
+              width="24" height="24" viewBox="0 0 24 24" fill="none"
+              className={`pull-down-chevron${showPrevQuestions ? ' rotated' : ''}`}
+            >
+              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* Chat area */}
+      <div className="user-guesser-chat">
+        {aiBubbleContent && (
+          <div
+            key={aiBubbleThinking ? 'thinking' : `answer-${questionCount}`}
+            className={`chat-bubble chat-bubble--ai${aiBubbleType ? ` chat-bubble--${aiBubbleType}` : ''}${aiBubbleThinking ? ' thinking' : ''}`}
+          >
+            <p>{aiBubbleContent}</p>
           </div>
         )}
 
-        {/* Card showing the user's current question */}
-        {currentQuestion ? (
-          <div className="user-guesser-card" key={cardKey}>
-            <p className="user-guesser-card-text">{currentQuestion}</p>
+        {currentQuestion && (
+          <div key={`q-${questionCount}`} className="chat-bubble chat-bubble--user">
+            <p>{currentQuestion}</p>
           </div>
-        ) : (
-          <div className="user-guesser-card">
-            <p className="user-guesser-card-text">
-              {isLoading ? 'AI is thinking of an object...' : 'Ask your first question!'}
-            </p>
+        )}
+
+        {!currentQuestion && !isLoading && gameStarted && (
+          <div className="chat-bubble chat-bubble--user chat-bubble--placeholder">
+            <p>Ask your first question!</p>
           </div>
         )}
       </div>
 
       {!gameEnded ? (
         <>
-          {/* Question counter */}
           <div className="user-guesser-counter">
             Question {questionCount} of 20
           </div>
 
-          {/* Input area */}
           <div className={`user-guesser-input-area${isLoading || !gameStarted ? ' disabled' : ''}`}>
             <form className="user-guesser-form" onSubmit={handleAskQuestion}>
               <input
