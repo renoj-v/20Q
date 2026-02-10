@@ -23,7 +23,7 @@ export const AI_GUESSER_QUESTIONS = [
   "Does it have black and white keys?",
   "Can you stand it upright against a wall?",
   "Has it been around for more than 200 years?",
-  "My final guess — is it a piano?",
+  "Is it a piano?",
 ];
 
 // If the user keeps answering past all scripted questions, repeat a filler.
