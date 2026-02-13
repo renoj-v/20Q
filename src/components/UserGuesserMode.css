@@ -11,6 +11,7 @@
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  transition: background 0.8s ease;
 }
 
 /* Decorative gradient background shapes */
@@ -22,6 +23,7 @@
   filter: blur(80px);
   opacity: 0.5;
   pointer-events: none;
+  transition: background 0.8s ease;
 }
 
 .user-guesser::before {
@@ -58,6 +60,7 @@
   background: var(--gradient-orb-3);
   filter: blur(60px);
   opacity: 0.4;
+  transition: background 0.8s ease;
 }
 
 .user-guesser-bg::after {
@@ -70,6 +73,101 @@
   background: var(--gradient-orb-4);
   filter: blur(60px);
   opacity: 0.35;
+  transition: background 0.8s ease;
+}
+
+/* ─── Phase: Final Guess — Orange/brown background ─── */
+.user-guesser.phase-final-guess {
+  background: #c09060;
+}
+
+.user-guesser.phase-final-guess::before {
+  background: radial-gradient(ellipse at center, #a06830 0%, #7c4a20 40%, transparent 70%);
+}
+
+.user-guesser.phase-final-guess::after {
+  background: radial-gradient(ellipse at center, #c08050 0%, #a06030 30%, transparent 70%);
+}
+
+.user-guesser.phase-final-guess .user-guesser-bg::before {
+  background: radial-gradient(ellipse at center, #b07040 0%, transparent 60%);
+}
+
+.user-guesser.phase-final-guess .user-guesser-bg::after {
+  background: radial-gradient(ellipse at center, #906030 0%, transparent 60%);
+}
+
+.user-guesser.phase-final-guess .user-guesser-counter {
+  color: var(--color-text);
+}
+
+.user-guesser.phase-final-guess .user-guesser-back {
+  color: var(--color-text-white-subtle);
+}
+
+/* Final-guess input theming — brown tones */
+.user-guesser.phase-final-guess .user-guesser-input {
+  background: #60330b;
+  border-color: #9aa8c6;
+}
+
+.user-guesser.phase-final-guess .user-guesser-submit {
+  background: #60330b;
+  border-color: #9aa8c6;
+}
+
+.user-guesser.phase-final-guess .user-guesser-submit:hover {
+  background: #7a4510;
+}
+
+.user-guesser.phase-final-guess .user-guesser-form::before {
+  background: #d9d9d9;
+}
+
+/* ─── Phase: Result — Correct (teal/green) ─── */
+.user-guesser.phase-result.result-correct {
+  background: #60b0a0;
+}
+
+.user-guesser.phase-result.result-correct::before {
+  background: radial-gradient(ellipse at center, #208070 0%, #106050 40%, transparent 70%);
+}
+
+.user-guesser.phase-result.result-correct::after {
+  background: radial-gradient(ellipse at center, #40a090 0%, #208070 30%, transparent 70%);
+}
+
+.user-guesser.phase-result.result-correct .user-guesser-bg::before {
+  background: radial-gradient(ellipse at center, #309080 0%, transparent 60%);
+}
+
+.user-guesser.phase-result.result-correct .user-guesser-bg::after {
+  background: radial-gradient(ellipse at center, #107060 0%, transparent 60%);
+}
+
+/* ─── Phase: Result — Incorrect (red) ─── */
+.user-guesser.phase-result.result-incorrect {
+  background: #b06060;
+}
+
+.user-guesser.phase-result.result-incorrect::before {
+  background: radial-gradient(ellipse at center, #903030 0%, #702020 40%, transparent 70%);
+}
+
+.user-guesser.phase-result.result-incorrect::after {
+  background: radial-gradient(ellipse at center, #b04040 0%, #903030 30%, transparent 70%);
+}
+
+.user-guesser.phase-result.result-incorrect .user-guesser-bg::before {
+  background: radial-gradient(ellipse at center, #a03838 0%, transparent 60%);
+}
+
+.user-guesser.phase-result.result-incorrect .user-guesser-bg::after {
+  background: radial-gradient(ellipse at center, #802828 0%, transparent 60%);
+}
+
+.user-guesser.phase-result .user-guesser-back {
+  color: var(--color-text-white-subtle);
 }
 
 /* ─── Back button ─── */
@@ -126,9 +224,8 @@
 /* Individual prev question row */
 .prev-question {
   width: 100%;
-  height: 43px;
   display: flex;
-  align-items: center;
+  align-items: left;
   padding: 0 32px;
   position: relative;
 }
@@ -143,11 +240,9 @@
 
 .prev-question p {
   font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 30.554px;
+  font-size: 14px;
+  line-height: 32px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   width: 198px;
 }
 
@@ -225,39 +320,39 @@
 
 /* Pull-down button answer-type gradient + glow */
 .pull-down-btn--yes {
-  background: linear-gradient(180deg, rgba(72, 199, 108, 0.5), rgba(72, 199, 108, 0.15));
+  background: radial-gradient(75% 75% at 50% 66.67%, #FFF 60%, #C7EBFB 100%);
   box-shadow: 0 0 10px rgba(72, 199, 108, 0.4);
   color: #0a3d1a;
 }
 .pull-down-btn--yes:hover {
-  background: linear-gradient(180deg, rgba(72, 199, 108, 0.65), rgba(72, 199, 108, 0.25));
+  background: radial-gradient(75% 75% at 50% 66.67%, #FFF 60%, #C7EBFB 100%)
 }
 
 .pull-down-btn--no {
-  background: linear-gradient(180deg, rgba(220, 60, 60, 0.5), rgba(220, 60, 60, 0.15));
+  background: radial-gradient(75% 75% at 50% 66.67%, #FFF 60%, #F8C5D5 100%);
   box-shadow: 0 0 10px rgba(220, 60, 60, 0.4);
   color: #4c0a0a;
 }
 .pull-down-btn--no:hover {
-  background: linear-gradient(180deg, rgba(220, 60, 60, 0.65), rgba(220, 60, 60, 0.25));
+  background: linear-gradient(180deg, rgba(220, 60, 60, 0.65), rgba(255, 255, 255, 1));
 }
 
 .pull-down-btn--sometimes {
-  background: linear-gradient(180deg, rgba(240, 200, 40, 0.5), rgba(240, 200, 40, 0.15));
+  background: linear-gradient(180deg, rgba(240, 200, 40, 0.5), rgba(255, 255, 255, 1));
   box-shadow: 0 0 10px rgba(240, 200, 40, 0.4);
   color: #4c3d05;
 }
 .pull-down-btn--sometimes:hover {
-  background: linear-gradient(180deg, rgba(240, 200, 40, 0.65), rgba(240, 200, 40, 0.25));
+  background: linear-gradient(180deg, rgba(240, 200, 40, 0.65), rgba(255, 255, 255, 1));
 }
 
 .pull-down-btn--unsure {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.15));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1));
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
   color: #0c0e10;
 }
 .pull-down-btn--unsure:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.25));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 1));
 }
 
 /* ─── Chat area ─── */
@@ -371,6 +466,7 @@
   font-size: var(--text-sm);
   color: var(--color-text);
   text-align: center;
+  transition: color 0.8s ease;
 }
 
 /* ─── Textbox area ─── */
@@ -398,6 +494,7 @@
   background: #d9d9d9;
   box-shadow: var(--glow-input);
   z-index: -1;
+  transition: background 0.8s ease;
 }
 
 .user-guesser-input {
@@ -413,6 +510,7 @@
   font-size: var(--text-base);
   color: var(--color-text-white);
   outline: none;
+  transition: background 0.8s ease, border-color 0.8s ease;
 }
 
 .user-guesser-input::placeholder {
@@ -436,7 +534,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), border-color 0.8s ease;
 }
 
 .user-guesser-submit:hover {
@@ -460,108 +558,66 @@
   fill: var(--color-text-white);
 }
 
-/* ─── Game end overlay ─── */
-.user-guesser-end {
+/* ─── Result screen ─── */
+.user-guesser-result {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   margin-top: auto;
-  margin-bottom: auto;
-  width: 300px;
-  max-width: 85vw;
+  margin-bottom: 60px;
+  width: 334px;
+  max-width: 90vw;
   text-align: center;
 }
 
-.user-guesser-end h3 {
+.user-guesser-result h2 {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: var(--text-2xl);
-  color: var(--color-text-white);
-  margin-bottom: 8px;
+  font-size: 37px;
+  color: var(--color-text);
+  margin-bottom: 4px;
 }
 
-.user-guesser-end p {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  color: var(--color-text-white-muted);
-  margin-bottom: 24px;
+.user-guesser-result p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-md);
+  color: var(--color-text);
+  margin-bottom: 48px;
 }
 
-.user-guesser-end-buttons {
+.user-guesser-result-buttons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
-.user-guesser-end-btn {
+.user-guesser-result-btn {
   width: 100%;
-  height: 48px;
-  border: 1px solid var(--color-border-light);
-  background: var(--bg-overlay);
-  color: var(--color-text-white);
+  height: 44px;
+  border: 1px solid #100e0c;
+  background: none;
+  color: #100e0c;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: var(--text-md);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  text-shadow: var(--glow-text);
   transition: background var(--transition-fast);
 }
 
-.user-guesser-end-btn:hover {
-  background: var(--bg-overlay-hover);
+.user-guesser-result-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-.user-guesser-end-btn:focus {
+.user-guesser-result-btn:focus {
   outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
-/* Final guess input area in end state */
-.user-guesser-final-guess {
-  display: flex;
-  width: 100%;
-  height: 48px;
-  margin-bottom: 12px;
-}
-
-.user-guesser-final-input {
-  flex: 1;
-  background: var(--bg-input);
-  border: 2px solid var(--color-border-input);
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
-  border-right: none;
-  padding: 0 16px;
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  color: var(--color-text-white);
-  outline: none;
-}
-
-.user-guesser-final-input::placeholder {
-  color: var(--color-text-white-dim);
-}
-
-.user-guesser-final-submit {
-  background: var(--bg-input);
-  border: 2px solid var(--color-border-input);
-  border-left: 1px solid var(--color-border-input);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  padding: 0 16px;
-  color: var(--color-text-white);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: var(--text-sm);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background var(--transition-fast);
-}
-
-.user-guesser-final-submit:hover {
-  background: #0d3080;
-}
-
-.user-guesser-final-submit:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+/* ─── Persistent floating particles keyframe ─── */
+@keyframes persistentDrift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(var(--drift-x), var(--drift-y)); }
 }
 
 /* ─── Error state ─── */
@@ -602,6 +658,10 @@
   }
 
   .user-guesser-top {
+    width: 90vw;
+  }
+
+  .user-guesser-result {
     width: 90vw;
   }
 }
