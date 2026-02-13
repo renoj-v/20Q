@@ -10,6 +10,7 @@
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  transition: background 0.8s ease;
 }
 
 /* Decorative gradient background shapes */
@@ -21,6 +22,7 @@
   filter: blur(80px);
   opacity: 0.5;
   pointer-events: none;
+  transition: background 0.8s ease;
 }
 
 .ai-guesser::before {
@@ -57,6 +59,7 @@
   background: var(--gradient-orb-3);
   filter: blur(60px);
   opacity: 0.4;
+  transition: background 0.8s ease;
 }
 
 .ai-guesser-bg::after {
@@ -69,9 +72,85 @@
   background: var(--gradient-orb-4);
   filter: blur(60px);
   opacity: 0.35;
+  transition: background 0.8s ease;
 }
 
-/* Back button */
+/* ─── Phase: Final Guess — Orange background ─── */
+.ai-guesser.phase-final-guess {
+  background: #c09060;
+}
+
+.ai-guesser.phase-final-guess::before {
+  background: radial-gradient(ellipse at center, #a06830 0%, #7c4a20 40%, transparent 70%);
+}
+
+.ai-guesser.phase-final-guess::after {
+  background: radial-gradient(ellipse at center, #c08050 0%, #a06030 30%, transparent 70%);
+}
+
+.ai-guesser.phase-final-guess .ai-guesser-bg::before {
+  background: radial-gradient(ellipse at center, #b07040 0%, transparent 60%);
+}
+
+.ai-guesser.phase-final-guess .ai-guesser-bg::after {
+  background: radial-gradient(ellipse at center, #906030 0%, transparent 60%);
+}
+
+.ai-guesser.phase-final-guess .ai-guesser-counter {
+  color: var(--color-text-white);
+}
+
+.ai-guesser.phase-final-guess .ai-guesser-back {
+  color: var(--color-text-white-subtle);
+}
+
+/* ─── Phase: Result — Correct (green/teal) ─── */
+.ai-guesser.phase-result.result-correct {
+  background: #60b0a0;
+}
+
+.ai-guesser.phase-result.result-correct::before {
+  background: radial-gradient(ellipse at center, #208070 0%, #106050 40%, transparent 70%);
+}
+
+.ai-guesser.phase-result.result-correct::after {
+  background: radial-gradient(ellipse at center, #40a090 0%, #208070 30%, transparent 70%);
+}
+
+.ai-guesser.phase-result.result-correct .ai-guesser-bg::before {
+  background: radial-gradient(ellipse at center, #309080 0%, transparent 60%);
+}
+
+.ai-guesser.phase-result.result-correct .ai-guesser-bg::after {
+  background: radial-gradient(ellipse at center, #107060 0%, transparent 60%);
+}
+
+/* ─── Phase: Result — Incorrect (red) ─── */
+.ai-guesser.phase-result.result-incorrect {
+  background: #b06060;
+}
+
+.ai-guesser.phase-result.result-incorrect::before {
+  background: radial-gradient(ellipse at center, #903030 0%, #702020 40%, transparent 70%);
+}
+
+.ai-guesser.phase-result.result-incorrect::after {
+  background: radial-gradient(ellipse at center, #b04040 0%, #903030 30%, transparent 70%);
+}
+
+.ai-guesser.phase-result.result-incorrect .ai-guesser-bg::before {
+  background: radial-gradient(ellipse at center, #a03838 0%, transparent 60%);
+}
+
+.ai-guesser.phase-result.result-incorrect .ai-guesser-bg::after {
+  background: radial-gradient(ellipse at center, #802828 0%, transparent 60%);
+}
+
+.ai-guesser.phase-result .ai-guesser-back {
+  color: var(--color-text-white-subtle);
+}
+
+/* ─── Back button ─── */
 .ai-guesser-back {
   position: absolute;
   top: 16px;
@@ -96,7 +175,7 @@
   outline-offset: 2px;
 }
 
-/* Question counter */
+/* ─── Question counter ─── */
 .ai-guesser-counter {
   position: relative;
   z-index: 2;
@@ -105,9 +184,10 @@
   font-size: var(--text-sm);
   color: var(--color-text);
   text-align: center;
+  transition: color 0.8s ease;
 }
 
-/* Answer area */
+/* ─── Answer area (playing phase) ─── */
 .ai-guesser-answers {
   position: relative;
   z-index: 2;
@@ -210,133 +290,111 @@
   margin-top: 16px;
 }
 
-/* Game end overlay */
-.ai-guesser-end {
+/* ─── Final guess buttons (simple bordered No/Yes) ─── */
+.ai-guesser-final-buttons {
   position: relative;
   z-index: 2;
+  display: flex;
+  gap: 16px;
   margin-top: auto;
-  margin-bottom: auto;
-  width: 300px;
-  max-width: 85vw;
-  text-align: center;
+  padding-bottom: 120px;
+  width: 334px;
+  max-width: 90vw;
 }
 
-.ai-guesser-end h3 {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: var(--text-2xl);
-  color: var(--color-text-white);
-  margin-bottom: 8px;
-}
-
-.ai-guesser-end p {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  color: var(--color-text-white-muted);
-  margin-bottom: 24px;
-}
-
-/* Yes/No buttons for end screen */
-.ai-guesser-end-yesno {
-  display: flex;
-  justify-content: center;
-  gap: 48px;
-  margin-top: 24px;
-}
-
-.ai-guesser-end-no,
-.ai-guesser-end-yes {
+.ai-guesser-final-btn {
+  flex: 1;
+  height: 44px;
+  border: 1px solid #100e0c;
   background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px;
-  transition: transform var(--transition-fast);
-}
-
-.ai-guesser-end-no:hover,
-.ai-guesser-end-yes:hover {
-  transform: scale(1.1);
-}
-
-.ai-guesser-end-no:focus,
-.ai-guesser-end-yes:focus {
-  outline: var(--outline-focus);
-  outline-offset: 4px;
-}
-
-.ai-guesser-end-no:active,
-.ai-guesser-end-yes:active {
-  transform: scale(0.95);
-}
-
-.ai-guesser-end-no .label,
-.ai-guesser-end-yes .label {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: var(--text-3xl);
-  color: var(--color-text-white);
-  text-shadow: var(--glow-text);
-  line-height: 1;
-}
-
-.ai-guesser-end-no .label {
-  transform: rotate(-7.45deg);
-}
-
-.ai-guesser-end-yes .label {
-  transform: rotate(14.24deg);
-}
-
-.ai-guesser-end-no .arrow,
-.ai-guesser-end-yes .arrow {
-  font-size: var(--text-xs);
-  color: var(--color-text-white);
-  line-height: 1;
-}
-
-.ai-guesser-end-no .arrow {
-  align-self: flex-start;
-  margin-bottom: 2px;
-}
-
-.ai-guesser-end-yes .arrow {
-  align-self: flex-end;
-  margin-bottom: 2px;
-}
-
-.ai-guesser-end-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.ai-guesser-end-btn {
-  width: 100%;
-  height: 48px;
-  border: 1px solid var(--color-border-light);
-  background: var(--bg-overlay);
-  color: var(--color-text-white);
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-input);
   font-size: var(--text-md);
+  color: #100e0c;
+  text-shadow: var(--glow-text);
   cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: background var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
-.ai-guesser-end-btn:hover {
-  background: var(--bg-overlay-hover);
+.ai-guesser-final-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.03);
 }
 
-.ai-guesser-end-btn:focus {
+.ai-guesser-final-btn:active {
+  transform: scale(0.97);
+}
+
+.ai-guesser-final-btn:focus {
   outline: var(--outline-focus);
   outline-offset: 2px;
 }
 
-/* Error state */
+/* ─── Result screen ─── */
+.ai-guesser-result {
+  position: relative;
+  z-index: 4;
+  margin-top: auto;
+  margin-bottom: 60px;
+  width: 334px;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.ai-guesser-result h2 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 37px;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.ai-guesser-result p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-md);
+  color: var(--color-text);
+  margin-bottom: 48px;
+}
+
+.ai-guesser-result-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ai-guesser-result-btn {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #100e0c;
+  background: none;
+  color: #100e0c;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-md);
+  cursor: pointer;
+  text-shadow: var(--glow-text);
+  transition: background var(--transition-fast);
+}
+
+.ai-guesser-result-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ai-guesser-result-btn:focus {
+  outline: var(--outline-focus);
+  outline-offset: 2px;
+}
+
+/* ─── Persistent floating particles keyframe ─── */
+@keyframes persistentDrift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(var(--drift-x), var(--drift-y)); }
+}
+
+/* ─── Error state ─── */
 .ai-guesser-error {
   position: relative;
   z-index: 2;
@@ -367,7 +425,7 @@
   pointer-events: none;
 }
 
-/* Responsive */
+/* ─── Responsive ─── */
 @media (max-width: 400px) {
   .ai-guesser-counter {
     margin-top: 80px;
@@ -376,5 +434,10 @@
   .ai-guesser-answers {
     width: 90vw;
     padding-bottom: 24px;
+  }
+
+  .ai-guesser-final-buttons {
+    width: 90vw;
+    padding-bottom: 80px;
   }
 }
