@@ -91,7 +91,7 @@ export function spawnParticles(rect, direction, config) {
       pointer-events:none;
       transition:transform ${lifetime}ms cubic-bezier(.15,.8,.3,1),opacity ${lifetime}ms ease-out;
     `;
-    
+
 
     const dotBG = document.createElement('div');
     dotBG.style.cssText = dot.style.cssText;

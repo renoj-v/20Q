@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { initializeAIGuesser, continueAIGuesser } from '../services/claude';
-import SwipeCard, { spawnParticles, SWIPE_CONFIG } from './SwipeCard';
-import AnswerButtons from './AnswerButtons';
+import SwipeCard, { spawnParticles, SWIPE_CONFIG } from './shared/SwipeCard';
+import AnswerButtons from './shared/AnswerButtons';
 import { spawnPersistentParticles, detectFinalGuess } from './ai-guessor/utils';
 import QuestionCounter from './ai-guessor/QuestionCounter';
 import FinalGuessButtons from './ai-guessor/FinalGuessButtons';
