@@ -2,14 +2,13 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // ── Transition configs ──────────────────────────────────────────────────────
-const bubbleTransition = { duration: .4, ease: 'easeOut' };
-const exitTransition   = { duration: .2, ease: 'easeIn' };
+const bubbleTransition = { duration: 0.4, ease: 'easeOut' };
+const exitTransition   = { duration: 0.2, ease: 'easeIn' };
 
 // ── Layout / structural styles (never animated) ─────────────────────────────
 const base = {
   maxWidth: '262px',
   padding: '32px',
-  position: "absolute"
 };
 
 const aiStyle = {
@@ -46,7 +45,7 @@ const userP = {
   color: 'var(--color-text)',
 };
 
-// ── Answer-type colors (used in Motion animate for smooth transitions) ───────
+// ── Answer-type colors (animated by Motion when answer arrives) ──────────────
 const answerAnimate = {
   default:   { background: 'rgba(255, 255, 255, 0.8)', boxShadow: '0 0 14px 0 rgba(255, 255, 255, 0.6)' },
   yes:       { background: 'rgba(200, 245, 215, 0.9)', boxShadow: '0 0 14px 0 rgba(72,  199, 108, 0.55)' },
@@ -55,58 +54,41 @@ const answerAnimate = {
   unsure:    { background: 'rgba(255, 255, 255, 0.8)', boxShadow: '0 0 14px 0 rgba(255, 255, 255, 0.6)' },
 };
 
-// ── Shared enter / exit motion props ────────────────────────────────────────
+// ── Shared enter / exit motion props ─────────────────────────────────────────
 const enterExit = {
   initial: { opacity: 0, y: 16, scale: 0.95 },
   exit:    { opacity: 0, scale: 0.95, transition: exitTransition },
 };
 
-// ── ThinkingBubble: fades in then pulses ────────────────────────────────────
-// Must receive a React `key` on the JSX element for AnimatePresence tracking.
-const ThinkingBubble = ({ style, children }) => (
-  <motion.div
-    style={{ ...aiStyle, ...answerAnimate.default, ...style }}
-    {...enterExit}
-    animate={{ opacity: 1, y: 0, scale: 1, ...answerAnimate.default }}
-    transition={bubbleTransition}
-  >
-    {children}
-  </motion.div>
-);
-
-// ── ChatArea ─────────────────────────────────────────────────────────────────
+// ── ChatArea ──────────────────────────────────────────────────────────────────
 const ChatArea = ({
   aiBubbleContent,
   aiBubbleType,
-  aiBubbleThinking,
   currentQuestion,
   questionCount,
   gamePhase,
   finalGuessText,
   isLoading,
 }) => {
+  // null aiBubbleType (thinking) → default white; set type → answer color
   const aiColors = answerAnimate[aiBubbleType] ?? answerAnimate.default;
 
   return (
     <div className="user-guesser-chat">
       <AnimatePresence mode="popLayout">
 
+        {/* AI bubble — stable key per question so it stays mounted
+            through thinking → answer; Motion animates the color change */}
         {aiBubbleContent && (
-          aiBubbleThinking ? (
-            <ThinkingBubble key="ai-thinking">
-              <p style={aiP}>{aiBubbleContent}</p>
-            </ThinkingBubble>
-          ) : (
-            <motion.div
-              key={`answer-${questionCount}`}
-              style={aiStyle}
-              {...enterExit}
-              animate={{ opacity: 1, y: 0, scale: 1, ...aiColors }}
-              transition={bubbleTransition}
-            >
-              <p style={aiP}>{aiBubbleContent}</p>
-            </motion.div>
-          )
+          <motion.div
+            key={`ai-${questionCount}`}
+            style={aiStyle}
+            {...enterExit}
+            animate={{ opacity: 1, y: 0, scale: 1, ...aiColors }}
+            transition={bubbleTransition}
+          >
+            <p style={aiP}>{aiBubbleContent}</p>
+          </motion.div>
         )}
 
         {gamePhase === 'playing' && currentQuestion && (
@@ -133,10 +115,16 @@ const ChatArea = ({
           </motion.div>
         )}
 
-        {gamePhase === 'final-guess' && isLoading && finalGuessText && (
-          <ThinkingBubble key="final-thinking">
+        {gamePhase === 'final-guess' && isLoading && (
+          <motion.div
+            key="final-thinking"
+            style={{ ...aiStyle, ...answerAnimate.default }}
+            {...enterExit}
+            animate={{ opacity: 1, y: 0, scale: 1, ...answerAnimate.default }}
+            transition={bubbleTransition}
+          >
             <p style={aiP}>hmmm...</p>
-          </ThinkingBubble>
+          </motion.div>
         )}
 
       </AnimatePresence>

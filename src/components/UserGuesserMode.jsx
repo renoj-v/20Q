@@ -221,12 +221,10 @@ const UserGuesserMode = ({ onBackToMenu }) => {
 
   let aiBubbleContent = null;
   let aiBubbleType = null;
-  let aiBubbleThinking = false;
 
   if (gamePhase === 'playing') {
     if (isLoading && currentQuestion) {
       aiBubbleContent = 'hmmm...';
-      aiBubbleThinking = true;
     } else if (aiResponse) {
       aiBubbleContent = aiResponse;
       aiBubbleType = currentAnswerType;
@@ -265,7 +263,6 @@ const UserGuesserMode = ({ onBackToMenu }) => {
       <ChatArea
         aiBubbleContent={aiBubbleContent}
         aiBubbleType={aiBubbleType}
-        aiBubbleThinking={aiBubbleThinking}
         currentQuestion={currentQuestion}
         questionCount={questionCount}
         gamePhase={gamePhase}
