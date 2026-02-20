@@ -1,5 +1,5 @@
 /* Base button reset and shared styles */
-@import '../variables.css';
+@import '../../variables.css';
 
 .btn {
   background: none;

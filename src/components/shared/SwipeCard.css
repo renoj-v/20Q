@@ -1,5 +1,5 @@
 /* SwipeCard — draggable question card */
-@import '../variables.css';
+@import '../../variables.css';
 
 .swipe-card {
   position: relative;
