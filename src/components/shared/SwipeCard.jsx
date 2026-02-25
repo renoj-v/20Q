@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { motion } from 'motion/react';
 import './SwipeCard.css';
 
 /* ─── Tunable animation config ─── */
@@ -218,19 +219,31 @@ const SwipeCard = forwardRef(({ text, isLoading, onSwipe, disabled, glowOverride
       };
 
   return (
-    <div
-      ref={cardRef}
-      className="swipe-card"
-      style={cardStyle}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9, y: -80 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
-      <p className={`swipe-card-text${isLoading ? ' loading' : ''}`}>
-        {text}
-      </p>
-    </div>
+      <div
+        ref={cardRef}
+        className="swipe-card"
+        style={cardStyle}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
+        <motion.p
+          className="swipe-card-text"
+          animate={isLoading ? { opacity: [1, 0.4, 1] } : { opacity: 1 }}
+          transition={isLoading
+            ? { duration: 1.5, ease: 'easeInOut', repeat: Infinity, repeatType: 'loop' }
+            : { duration: 0.2 }}
+        >
+          {text}
+        </motion.p>
+      </div>
+    </motion.div>
   );
 });
 

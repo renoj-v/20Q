@@ -19,6 +19,8 @@ const UserGuesserMode = ({ onBackToMenu }) => {
   const [aiResponse, setAiResponse] = useState('');
   const [finalResult, setFinalResult] = useState('');
   const inputRef = useRef(null);
+  const submitBtnRef = useRef(null);
+  const [questionOrigin, setQuestionOrigin] = useState(null);
 
   const [questionLog, setQuestionLog] = useState([]);
   const [showPrevQuestions, setShowPrevQuestions] = useState(false);
@@ -145,6 +147,10 @@ const UserGuesserMode = ({ onBackToMenu }) => {
     e.preventDefault();
     if (!userInput.trim() || gamePhase !== 'playing' || isLoading || questionCount >= 20) return;
 
+    if (submitBtnRef.current) {
+      setQuestionOrigin(submitBtnRef.current.getBoundingClientRect());
+    }
+
     try {
       setIsLoading(true);
       setError(null);
@@ -265,6 +271,7 @@ const UserGuesserMode = ({ onBackToMenu }) => {
         aiBubbleType={aiBubbleType}
         currentQuestion={currentQuestion}
         questionCount={questionCount}
+        questionOrigin={questionOrigin}
         gamePhase={gamePhase}
         finalGuessText={finalGuessText}
         isLoading={isLoading}
@@ -278,6 +285,7 @@ const UserGuesserMode = ({ onBackToMenu }) => {
           isLoading={isLoading}
           gameStarted={gameStarted}
           inputRef={inputRef}
+          submitRef={submitBtnRef}
           onChange={(e) => setUserInput(e.target.value)}
           onSubmit={gamePhase === 'final-guess' ? handleFinalGuess : handleAskQuestion}
         />

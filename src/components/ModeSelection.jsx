@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import Button from './shared/Button';
 import './ModeSelection.css';
 
@@ -19,21 +20,31 @@ const ModeSelection = ({ onSelectMode }) => {
       <p className="mode-subtitle">Choose your game mode</p>
 
       <div className="mode-cards">
-        <div className="mode-card" >
+        <motion.div
+          className="mode-card"
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.2, 0.8, 0.3, 1] }}
+        >
           <h2>AI Guesser</h2>
           <p>Think of an object and let Claude AI guess it by asking you questions</p>
           <Button className="mode-btn" onClick={() => onSelectMode('ai-guesser')}>
             Play as Thinker
           </Button>
-        </div>
+        </motion.div>
 
-        <div className="mode-card" >
+        <motion.div
+          className="mode-card"
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.2, 0.8, 0.3, 1], delay: 0.08 }}
+        >
           <h2>User Guesser</h2>
           <p>Claude AI thinks of an object and you try to guess it by asking questions</p>
           <Button className="mode-btn" onClick={() => onSelectMode('user-guesser')}>
             Play as Guesser
           </Button>
-        </div>
+        </motion.div>
       </div>
 
       

@@ -7,6 +7,7 @@ const QuestionInput = ({
   isLoading,
   gameStarted,
   inputRef,
+  submitRef,
   onChange,
   onSubmit,
 }) => {
@@ -28,6 +29,7 @@ const QuestionInput = ({
             disabled={isLoading || !gameStarted}
           />
           <button
+            ref={submitRef}
             type="submit"
             className="user-guesser-submit"
             disabled={isLoading || !gameStarted || !userInput.trim()}
