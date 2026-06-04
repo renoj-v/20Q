@@ -9,6 +9,7 @@ const ModeSelection = ({ onSelectMode }) => {
       <div className="mode-selection-bg" />
 
       <h1 className="mode-title">20 Questions</h1>
+      <p className="mode-subtitle">Because the tokens are expensive to interact with an LLM, this is just a prototype for now.</p>
       <div className="mode-instructions">
         <h3>How to Play</h3>
         <ul>
