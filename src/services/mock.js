@@ -74,7 +74,7 @@ export const answerUserQuestion = async (conversationHistory, _systemPrompt) => 
     if (text.includes('give up') || text.includes('i give up') || text.includes('reveal')) {
       return USER_GUESSER_REVEAL_RESPONSE;
     }
-    if (text.includes('is it') || text.includes('my final guess') || text.includes('please tell me if')) {
+    if (userGuesserIndex >= 10 && (text.includes('is it') || text.includes('my final guess') || text.includes('please tell me if'))) {
       return USER_GUESSER_CORRECT_RESPONSE;
     }
   }

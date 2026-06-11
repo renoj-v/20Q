@@ -8,7 +8,8 @@ const PrevQuestionsPanel = ({ questionLog, showPrevQuestions, lastLogAnswerType,
       <div className={`prev-questions-panel${showPrevQuestions ? ' expanded' : ''}`}>
         {questionLog.map((entry, i) => (
           <div key={i} className={`prev-question prev-question--${entry.answerType}`}>
-            <p>{entry.shortenedText}</p>
+            <p className="prev-question-text">{entry.question}</p>
+            <p className="prev-question-label">{entry.answerType}</p>
           </div>
         ))}
       </div>
