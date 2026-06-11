@@ -6,10 +6,9 @@ import './ModeSelection.css';
 const ModeSelection = ({ onSelectMode }) => {
   return (
     <div className="mode-selection">
+        <p className="mode-banner">Prototype mode: Playing 20Q with a modern LLM takes a lot of tokens. This game currently runs in prototype-mode, where it's not connected to an Claude. Use it to check out my design and animations.</p>
       <div className="mode-selection-bg" />
-
       <h1 className="mode-title">20 Questions</h1>
-      <p className="mode-subtitle">Because the tokens are expensive to interact with an LLM, this is just a prototype for now.</p>
       <div className="mode-instructions">
         <h3>How to Play</h3>
         <ul>
