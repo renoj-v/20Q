@@ -6,7 +6,7 @@ import './ModeSelection.css';
 const ModeSelection = ({ onSelectMode }) => {
   return (
     <div className="mode-selection">
-        <p className="mode-banner">Prototype mode: Playing 20Q with a modern LLM takes a lot of tokens. This game currently runs in prototype-mode, where it's not connected to an Claude. Use it to check out my design and animations.</p>
+        <p className="mode-banner">Prototype mode: Playing 20Q with a modern LLM takes a lot of tokens. This game currently runs in prototype-mode, where it's not connected to Claude. It still functions to show my prototyping skills using Claude Code, Cursor, and Figma MCP.</p>
       <div className="mode-selection-bg" />
       <h1 className="mode-title">20 Questions</h1>
       <div className="mode-instructions">
