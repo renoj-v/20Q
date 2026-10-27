@@ -18,8 +18,8 @@ The project doubles as a **product design case study**. Its purpose is to demons
 ## 2. Goals
 
 1. **Showcase interaction & visual design** for an AI product — thinking states, latency, confidence, and correction flows.
-2. **Learn by building** — design and ship the product end-to-end in TypeScript.
-3. **Validate design decisions with evidence** — a comparative playtest of three interaction variants informs what ships.
+2. **Learn by building** — design and ship the product end-to-end in TypeScript and React.
+3. **Explore before committing** — divergent interaction studies and three variants, with each design decision and its rationale documented.
 4. **Zero-friction access** — anyone (especially hiring managers) can play within seconds, with no account or API key.
 
 ### Non-goals (v1)
@@ -30,6 +30,7 @@ The project doubles as a **product design case study**. Its purpose is to demons
 - User accounts or server-side persistence
 - Hosting or paying for a shared API key
 - Public variant switcher on the live site
+- Formal user playtesting
 
 ## 3. Audience
 
@@ -150,7 +151,7 @@ The project doubles as a **product design case study**. Its purpose is to demons
 
 ## 7. Technical approach
 
-- **Stack:** TypeScript, Next.js (static export), Tailwind CSS, Framer Motion for animation, transitions, and interactions.
+- **Stack:** TypeScript, React.js, Next.js (static export), Tailwind CSS, Framer Motion for animation, transitions, and interactions.
 - **Architecture:** a single `AiPlayer` interface with two implementations — `DemoAiPlayer` (rule-based) and `ClaudeAiPlayer` (direct browser calls) — so the UI is agnostic to mode.
 - **State:** client-side game state as an ordered list of turns; rewind = truncate the list.
 - **Hosting:** Vercel (or equivalent static host).
@@ -159,17 +160,26 @@ The project doubles as a **product design case study**. Its purpose is to demons
 
 The design process is the main deliverable for the case study.
 
+### Approach
+
+- **Engine first:** the demo AI plays a full game in a bare UI before visual design begins, so design happens against real behavior.
+- **States, not screens:** a state matrix (turn states × question/guess × rewind, win, loss, reveal, error) is the design checklist.
+- **Figma for visual language and layout; code for anything that moves or waits.** Latency, streaming, and rewind are designed in code.
+
+### Interaction studies
+
+- Isolated, dev-only `/lab` routes, one per key interaction: thinking/streaming, slow state, guess reveal, rewind, confidence visualization.
+- Motion is tuned live (e.g. a tweak panel for springs and timings) and each study is screen-recorded for the case study.
+
 ### Variants
 
-- Three **interaction design variants** of the game will be designed (specifics defined later, outside this PRD).
-- The variants exist **for the playtest only**. The winning variant ships on the live site.
-- The build must support switching between variants during development and playtesting (e.g. a dev-only flag).
+- Three **interaction design variants**, each a distinct position on a single design question (e.g. how much of the AI's mind the player sees). Specifics defined in the design phase.
+- The build supports switching between variants during development (dev-only flag).
+- The shipped variant is chosen through self-critique and dogfooding; the rationale is documented for the case study.
 
-### Playtest
+### Build log
 
-- **Goal:** a **comparative test** of the three variants to understand which interactions players enjoy most.
-- **Format:** ~5 participants, each plays all three variants on the **real build** (not a Figma prototype) so latency and streaming feel authentic. Think-aloud plus a short preference interview.
-- **Output:** findings and the rationale for the winning variant, documented for the portfolio case study.
+- Short recordings and notes captured throughout, forming the raw material for the case study.
 
 ### Case study
 
@@ -179,17 +189,18 @@ The design process is the main deliverable for the case study.
 
 | Days | Phase |
 |---|---|
-| 1–3 | Flows, wireframes, and three variants in Figma |
-| 4–9 | Build: demo mode first, then live Claude mode |
-| 10–11 | Comparative playtest (5 sessions) on the real build |
-| 12–14 | Implement winner, polish, launch |
+| 1 | References, variant definitions, state matrix |
+| 2–3 | Demo engine playable in a bare UI; rough variant sketches in Figma |
+| 4–7 | Interaction studies in `/lab`; visual direction in Figma |
+| 8–10 | Three variants in the real app behind a dev flag; live Claude mode |
+| 11–14 | Choose and refine the shipped variant, polish (a11y, reduced motion, errors), launch |
 
 ## 10. Success criteria
 
 - Live on a public URL within 2 weeks.
 - A first-time visitor can start a demo game with no setup.
 - All game states (thinking, streaming, slow, error, guess, win, loss, rewind) are designed and reachable.
-- Playtest completed with a documented winning variant and rationale.
+- Interaction studies recorded and the shipped variant's rationale documented.
 - Meets WCAG 2.2 AA and reduced-motion requirements.
 
 ## 11. Future
