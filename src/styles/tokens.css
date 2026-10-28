@@ -1,0 +1,111 @@
+/*
+ * Design tokens.
+ *
+ * This is the single place Figma variables land. Components never use raw
+ * colors or sizes — only the semantic tokens below (exposed to Tailwind in
+ * globals.css as bg-surface, text-fg-muted, rounded-card, etc.).
+ *
+ * When the Figma export arrives:
+ *   1. Replace the primitive values (--palette-*) with the Figma primitives.
+ *   2. Re-point the semantic tokens if Figma's naming differs.
+ *   3. Add any new semantic tokens here AND in the @theme block in globals.css.
+ *
+ * Current values are neutral placeholders chosen to meet WCAG 2.2 AA contrast.
+ */
+
+:root {
+  /* ---- Primitives (placeholder) ---- */
+  --palette-neutral-0: #ffffff;
+  --palette-neutral-50: #f6f6f4;
+  --palette-neutral-100: #ececea;
+  --palette-neutral-200: #dcdcd8;
+  --palette-neutral-400: #9a9a94;
+  --palette-neutral-600: #5c5c57;
+  --palette-neutral-800: #2a2a27;
+  --palette-neutral-900: #181816;
+  --palette-neutral-950: #0f0f0e;
+
+  --palette-accent-500: #4f46e5;
+  --palette-accent-600: #4338ca;
+  --palette-accent-100: #e8e7fc;
+  --palette-accent-300: #a5a0f5;
+
+  --palette-success-600: #15803d;
+  --palette-success-100: #dcfce7;
+  --palette-danger-600: #b91c1c;
+  --palette-danger-100: #fee2e2;
+  --palette-warning-700: #a16207;
+  --palette-warning-100: #fef3c7;
+
+  /* ---- Semantic: color ---- */
+  --bg: var(--palette-neutral-50);
+  --surface: var(--palette-neutral-0);
+  --surface-raised: var(--palette-neutral-0);
+  --surface-sunken: var(--palette-neutral-100);
+  --fg: var(--palette-neutral-900);
+  --fg-muted: var(--palette-neutral-600);
+  --fg-subtle: var(--palette-neutral-400);
+  --border: var(--palette-neutral-200);
+  --border-strong: var(--palette-neutral-400);
+  --focus-ring: var(--palette-accent-500);
+
+  --accent: var(--palette-accent-600);
+  --accent-fg: var(--palette-neutral-0);
+  --accent-soft: var(--palette-accent-100);
+
+  /* Guess turns are visually distinct from questions (FR-4). */
+  --guess: var(--palette-warning-700);
+  --guess-soft: var(--palette-warning-100);
+
+  --success: var(--palette-success-600);
+  --success-soft: var(--palette-success-100);
+  --danger: var(--palette-danger-600);
+  --danger-soft: var(--palette-danger-100);
+
+  /* Answer colors (log chips, answer buttons). */
+  --answer-yes: var(--palette-success-600);
+  --answer-no: var(--palette-danger-600);
+  --answer-sometimes: var(--palette-accent-600);
+  --answer-unsure: var(--palette-neutral-600);
+
+  /* ---- Semantic: type ---- */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---- Semantic: shape ---- */
+  --radius-control: 0.75rem;
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--palette-neutral-950);
+    --surface: var(--palette-neutral-900);
+    --surface-raised: var(--palette-neutral-800);
+    --surface-sunken: var(--palette-neutral-950);
+    --fg: var(--palette-neutral-50);
+    --fg-muted: var(--palette-neutral-400);
+    --fg-subtle: var(--palette-neutral-600);
+    --border: var(--palette-neutral-800);
+    --border-strong: var(--palette-neutral-600);
+    --focus-ring: var(--palette-accent-300);
+
+    --accent: var(--palette-accent-300);
+    --accent-fg: var(--palette-neutral-950);
+    --accent-soft: #24224a;
+
+    --guess: #facc15;
+    --guess-soft: #3a3010;
+
+    --success: #4ade80;
+    --success-soft: #12301d;
+    --danger: #f87171;
+    --danger-soft: #3b1515;
+
+    --answer-yes: #4ade80;
+    --answer-no: #f87171;
+    --answer-sometimes: var(--palette-accent-300);
+    --answer-unsure: var(--palette-neutral-400);
+  }
+}
