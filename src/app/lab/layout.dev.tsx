@@ -18,7 +18,7 @@ export default function LabLayout({ children }: { children: ReactNode }) {
           ← Game
         </Link>
       </nav>
-      {children}
+      <main>{children}</main>
     </div>
   );
 }

@@ -8,7 +8,10 @@ export function VariantSwitcher() {
   if (!variantsEnabled) return null;
 
   return (
-    <div className="fixed right-3 bottom-3 z-50 flex items-center gap-1 rounded-pill border border-border bg-surface-raised p-1 text-xs shadow-lg">
+    <aside
+      aria-label="Variant switcher (dev only)"
+      className="fixed right-3 bottom-3 z-50 flex items-center gap-1 rounded-pill border border-border bg-surface-raised p-1 text-xs shadow-lg"
+    >
       <span className="px-2 text-fg-muted">Variant</span>
       {(Object.keys(VARIANTS) as VariantId[]).map((v) => (
         <button
@@ -22,6 +25,6 @@ export function VariantSwitcher() {
           {v}
         </button>
       ))}
-    </div>
+    </aside>
   );
 }

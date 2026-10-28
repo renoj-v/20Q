@@ -20,6 +20,8 @@
   --palette-neutral-100: #ececea;
   --palette-neutral-200: #dcdcd8;
   --palette-neutral-400: #9a9a94;
+  --palette-neutral-450: #858580;
+  --palette-neutral-500: #6b6b66;
   --palette-neutral-600: #5c5c57;
   --palette-neutral-800: #2a2a27;
   --palette-neutral-900: #181816;
@@ -44,9 +46,11 @@
   --surface-sunken: var(--palette-neutral-100);
   --fg: var(--palette-neutral-900);
   --fg-muted: var(--palette-neutral-600);
-  --fg-subtle: var(--palette-neutral-400);
+  /* Text tokens need ≥ 4.5:1 on every surface; --border-strong (control
+     outlines) needs ≥ 3:1 (WCAG 1.4.11). --border is decorative only. */
+  --fg-subtle: var(--palette-neutral-500);
   --border: var(--palette-neutral-200);
-  --border-strong: var(--palette-neutral-400);
+  --border-strong: var(--palette-neutral-450);
   --focus-ring: var(--palette-accent-500);
 
   --accent: var(--palette-accent-600);
@@ -86,9 +90,9 @@
     --surface-sunken: var(--palette-neutral-950);
     --fg: var(--palette-neutral-50);
     --fg-muted: var(--palette-neutral-400);
-    --fg-subtle: var(--palette-neutral-600);
+    --fg-subtle: #93938d;
     --border: var(--palette-neutral-800);
-    --border-strong: var(--palette-neutral-600);
+    --border-strong: #82827b;
     --focus-ring: var(--palette-accent-300);
 
     --accent: var(--palette-accent-300);

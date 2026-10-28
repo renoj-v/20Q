@@ -23,7 +23,11 @@ type AnswerControlsProps = {
   onAnswer(answer: Answer): void;
 };
 
-/** FR-2 / FR-4: four answers for questions, two for guesses. */
+/**
+ * FR-2 / FR-4: four answers for questions, two for guesses.
+ * Uses aria-disabled rather than `disabled` so a keyboard user's focus stays
+ * on the button while the AI thinks, instead of falling back to the page.
+ */
 export function AnswerControls({ kind, disabled, onAnswer }: AnswerControlsProps) {
   const options = answerOptions(kind);
   return (
@@ -37,8 +41,8 @@ export function AnswerControls({ kind, disabled, onAnswer }: AnswerControlsProps
           key={o.answer}
           variant={o.answer === "yes" && kind === "guess" ? "primary" : "secondary"}
           shortcut={o.key}
-          disabled={disabled}
-          onClick={() => onAnswer(o.answer)}
+          aria-disabled={disabled}
+          onClick={() => !disabled && onAnswer(o.answer)}
         >
           {o.label}
         </Button>

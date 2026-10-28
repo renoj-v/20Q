@@ -23,6 +23,17 @@ const ANSWER_COLOR: Record<Answer, string> = {
 
 /** FR-6–11: chronological log with inline rewind editing. */
 export function AnswerLog({ turns, editingIndex, onStartEdit, onCancelEdit, onConfirmEdit }: AnswerLogProps) {
+  const editButtons = useRef(new Map<number, HTMLButtonElement>());
+  const lastEditing = useRef<number | null>(null);
+
+  // When an edit closes, return focus to that row's Edit button.
+  useEffect(() => {
+    if (editingIndex === null && lastEditing.current !== null) {
+      editButtons.current.get(lastEditing.current)?.focus();
+    }
+    lastEditing.current = editingIndex;
+  }, [editingIndex]);
+
   let counted = 0;
   const rows = turns.flatMap((turn, index) => {
     if (turn.answer === null) return [];
@@ -68,7 +79,15 @@ export function AnswerLog({ turns, editingIndex, onStartEdit, onCancelEdit, onCo
                     {answerLabel(turn.answer, turn.ai.kind)}
                     {turn.answer === "unsure" && <span className="ml-1 font-normal text-fg-subtle">(not counted)</span>}
                   </span>
-                  <Button variant="ghost" className="min-h-9 px-2" onClick={() => onStartEdit(index)}>
+                  <Button
+                    ref={(el) => {
+                      if (el) editButtons.current.set(index, el);
+                      else editButtons.current.delete(index);
+                    }}
+                    variant="ghost"
+                    className="min-h-9 px-2"
+                    onClick={() => onStartEdit(index)}
+                  >
                     Edit<span className="sr-only"> answer to “{turn.ai.text}”</span>
                   </Button>
                 </div>
