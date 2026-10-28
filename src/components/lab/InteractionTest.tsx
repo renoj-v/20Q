@@ -66,7 +66,7 @@ export function InteractionTest() {
           </Link>
         </div>
 
-        <div role="group" aria-label="Interaction version" className="grid grid-cols-3 gap-1 rounded-control bg-surface-sunken p-1">
+        <div role="group" aria-label="Interaction version" className="grid grid-cols-2 gap-1 rounded-control bg-surface-sunken p-1 sm:grid-cols-4">
           {ANSWER_INTERACTIONS.map((v, i) => (
             <button
               key={v.id}
@@ -126,7 +126,7 @@ export function InteractionTest() {
           )}
         </span>
         <span className="hidden items-center gap-1 sm:flex">
-          Keys: <Kbd>Y</Kbd> <Kbd>N</Kbd> <Kbd>S</Kbd> <Kbd>U</Kbd> · switch <Kbd>1</Kbd>–<Kbd>3</Kbd>
+          Keys: <Kbd>Y</Kbd> <Kbd>N</Kbd> <Kbd>S</Kbd> <Kbd>U</Kbd> · switch <Kbd>1</Kbd>–<Kbd>{ANSWER_INTERACTIONS.length}</Kbd>
         </span>
         {state.phase !== "intro" && (
           <Button variant="ghost" onClick={start}>
