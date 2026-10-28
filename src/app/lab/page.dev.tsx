@@ -3,6 +3,7 @@ import Link from "next/link";
 const STUDIES = [
   { href: "/lab/states", title: "State matrix", body: "Every turn state and end state side by side, with fixed data — the design checklist." },
   { href: "/lab/thinking", title: "Thinking & streaming", body: "Live-tune latency, streaming speed, and the slow threshold against the demo AI." },
+  { href: "/test-interaction", title: "Answer interaction", body: "Three ways to say Yes / No / Sometimes / Unsure — swipe, spectrum, chat." },
 ];
 
 export default function LabIndex() {
