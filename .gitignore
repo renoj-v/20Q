@@ -6,3 +6,6 @@ next-env.d.ts
 .env*.local
 .DS_Store
 .vercel
+.claude/
+.npmrc
+lapse-client.ts
